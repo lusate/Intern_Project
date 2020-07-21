@@ -1,0 +1,8 @@
+jasypt:
+  encryptor:
+    algorithm: PBEWithMD5AndDES
+    password: milvussteve 
+
+variable:
+    db-secret-var: ENC(IP3s9D0dWuxQmTsZU6UAnA==)
+    
