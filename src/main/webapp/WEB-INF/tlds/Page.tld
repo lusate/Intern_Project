@@ -10,7 +10,7 @@
 
     <tag>
         <name>pagination</name>
-        <tag-class>com.mablic.template_kotlin.common.PaginationTagCustom</tag-class>
+        <tag-class>com.omnilab.template_kotlin.common.PaginationTagCustom</tag-class>
 
         <body-content>empty</body-content>
         <description>Pagination Tag</description>
