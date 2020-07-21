@@ -16,7 +16,7 @@ import java.util.ArrayList
 class CustomUserDetailService : UserDetailsService {
 
     @Autowired
-    private val sqlSession: SqlSession? = null
+    private lateinit var sqlSession: SqlSession
 
     override fun loadUserByUsername(username: String): UserDetails {
         /*

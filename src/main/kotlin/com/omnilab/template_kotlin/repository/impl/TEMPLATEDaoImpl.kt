@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component
 class TEMPLATEDaoImpl: TEMPLATEDao{
 
     @Autowired
-    private val sqlSession: SqlSession? = null
+    private lateinit var sqlSession: SqlSession
 
     override fun test(): String {
-        return sqlSession!!.selectOne<String>("select2")
+        return sqlSession.selectOne<String>("select2")
     }
 }

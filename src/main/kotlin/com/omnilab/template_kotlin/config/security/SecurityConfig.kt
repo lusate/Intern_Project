@@ -101,7 +101,7 @@ open class SecurityConfig: WebSecurityConfigurerAdapter() {
     }
 
     @Bean
-    open fun getSpringSecurityFilterChainBindedToError(@Qualifier("springSecurityFilterChain") springSecurityFilterChain: Filter): FilterRegistrationBean<*> {
+    fun getSpringSecurityFilterChainBindedToError(@Qualifier("springSecurityFilterChain") springSecurityFilterChain: Filter): FilterRegistrationBean<*> {
         val registration = FilterRegistrationBean<Filter>()
         registration.filter = springSecurityFilterChain
         registration.setDispatcherTypes(EnumSet.allOf(DispatcherType::class.java))
@@ -109,12 +109,12 @@ open class SecurityConfig: WebSecurityConfigurerAdapter() {
     }
 
     @Bean
-    open fun passwordEncoder(): PasswordEncoder {
+    fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
     }
 
     @Bean
-    open fun allowUrlHttpFirewall(): HttpFirewall {
+    fun allowUrlHttpFirewall(): HttpFirewall {
         val firewall = StrictHttpFirewall()
         //firewall.setAllowUrlEncodedPercent(true);
         firewall.setAllowUrlEncodedSlash(true)
@@ -123,7 +123,7 @@ open class SecurityConfig: WebSecurityConfigurerAdapter() {
 
     // create table persistent_logins (username varchar(64) not null, series varchar(64) primary key, token varchar(64) not null, last_used timestamp not null);
     @Bean
-    open fun persistentTokenRepository(): PersistentTokenRepository {
+    fun persistentTokenRepository(): PersistentTokenRepository {
         val db = JdbcTokenRepositoryImpl()
         db.setDataSource(dataSource)
         return db

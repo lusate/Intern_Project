@@ -5,8 +5,6 @@ import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpServletRequest
 import org.springframework.web.servlet.ModelAndView
 
-
-
 class InterceptorHandler: HandlerInterceptorAdapter() {
 
     @Throws(Exception::class)

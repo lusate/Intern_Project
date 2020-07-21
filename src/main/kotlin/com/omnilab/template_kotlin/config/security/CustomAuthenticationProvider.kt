@@ -23,8 +23,8 @@ class CustomAuthenticationProvider: AuthenticationProvider{
     private val sqlSession: SqlSession? = null
 */
     override fun authenticate(auth: Authentication): Authentication {
-        val user_email = auth.getPrincipal().toString()
-        val user_pw = auth.getCredentials().toString()
+        val user_email = auth.principal.toString()
+        val user_pw = auth.credentials.toString()
         var ip = CommonUtils.clientip(request)
         if (ip == "0:0:0:0:0:0:0:1")
             ip = "127.0.0.1"

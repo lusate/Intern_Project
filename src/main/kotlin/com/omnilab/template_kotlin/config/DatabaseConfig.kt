@@ -44,8 +44,8 @@ internal class DatabaseConfig {
     fun configureDataSource(): BasicDataSource {
         val dataSource = BasicDataSource()
         dataSource.driverClassName = "org.mariadb.jdbc.Driver"
-        dataSource.url = "jdbc:mariadb://127.0.0.1:6795/test"
-        dataSource.username = "test"
+        dataSource.url = "jdbc:mariadb://127.0.0.1:3306/test"
+        dataSource.username = "root"
         dataSource.password = passwd
         dataSource.initialSize = 2 // 최초 커넥션 풀에 채원 넣을 커넥션 수
         dataSource.maxTotal = 50

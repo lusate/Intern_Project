@@ -24,10 +24,10 @@ class OtherConfig {
     @Bean(name = arrayOf("JavaMailSender"))
     fun javaMailSender(): JavaMailSender {
         val mailSender = JavaMailSenderImpl()
-        mailSender.host = "mail.designerd.co.kr"
+        mailSender.host = ""
         mailSender.port = 587
-        mailSender.username = "master@designerd.co.kr"
-        mailSender.password = "m@blic_1@3$"
+        mailSender.username = ""
+        mailSender.password = ""
         val javaMailProperties = Properties()
         javaMailProperties.setProperty("mail.transport.protocol", "smtp")
         javaMailProperties.setProperty("mail.smtp.auth", "true")

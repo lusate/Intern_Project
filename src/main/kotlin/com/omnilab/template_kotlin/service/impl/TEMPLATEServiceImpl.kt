@@ -16,10 +16,10 @@ class TEMPLATEServiceImpl: TEMPLATEService {
 
     @Autowired
     @Qualifier("TEMPLATEDaoImpl")
-    private val dao: TEMPLATEDao? = null
+    private lateinit var dao: TEMPLATEDao
 
     override fun test(): String {
-        return dao!!.test()
+        return dao.test()
     }
 
     override fun taskService(r: Runnable) {

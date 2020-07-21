@@ -18,11 +18,11 @@ class TestController {
 	
     @Autowired
     @Qualifier("TEMPLATEServiceImpl")
-    private val service: TEMPLATEService? = null
+    private lateinit var service: TEMPLATEService
 
     @RequestMapping(value = arrayOf("/index"), method = arrayOf(RequestMethod.GET))
     fun index(): ModelAndView {
-		//logger.error(service!!.test());
+		logger.error(service.test());
         val view = ModelAndView("index")
         view.addObject("index", true)
         view.addObject("index2", true)
