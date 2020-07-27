@@ -1,5 +1,6 @@
 package com.omnilab.template_kotlin.config
 
+import com.navercorp.lucy.security.xss.servletfilter.XssEscapeServletFilter
 import com.omnilab.template_kotlin.config.handler.InterceptorHandler
 import com.omnilab.template_kotlin.config.view.DownloadView
 import com.omnilab.template_kotlin.config.view.ExcelDownloadView
@@ -7,7 +8,6 @@ import com.omnilab.template_kotlin.config.view.PrintView
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.core.Ordered
 import org.springframework.core.io.FileSystemResource
 import org.springframework.http.MediaType
 import org.springframework.http.converter.HttpMessageConverter
@@ -27,7 +27,6 @@ import org.springframework.web.servlet.view.tiles3.TilesViewResolver
 import java.io.IOException
 import java.nio.charset.Charset
 import java.util.*
-
 
 @Configuration
 @EnableWebMvc
@@ -63,6 +62,14 @@ class MvcConfig : WebMvcConfigurer {
     }
 
 
+    @Bean // naver-lucy-filter
+    fun xssEscapeServletFilter(): FilterRegistrationBean<XssEscapeServletFilter> {
+        val filterRegistrationBean: FilterRegistrationBean<XssEscapeServletFilter> = FilterRegistrationBean()
+        filterRegistrationBean.filter = XssEscapeServletFilter()
+        filterRegistrationBean.order = 1
+        return filterRegistrationBean
+    }
+
     @Bean //필터 등록
     fun deviceFilter(): FilterRegistrationBean<DeviceResolverRequestFilter> {
         val filterRegistrationBean = FilterRegistrationBean<DeviceResolverRequestFilter>()
@@ -71,28 +78,21 @@ class MvcConfig : WebMvcConfigurer {
         return filterRegistrationBean
     }
 
+    /*
+    @Bean //사이트 메쉬 필러 등록
+    fun siteMeshFilter(): FilterRegistrationBean<SiteMeshFilter>? {
+        val filterRegistrationBean: FilterRegistrationBean<SiteMeshFilter> = FilterRegistrationBean()
+        filterRegistrationBean.filter = SiteMeshFilter()
+        filterRegistrationBean.order = 3
+        return filterRegistrationBean
+    }
+    */
+
     @Bean //DispatcherServlet
     fun dispatcherServlet(): DispatcherServlet {
         val ds = DispatcherServlet()
         ds.setThrowExceptionIfNoHandlerFound(true)
         return ds
-    }
-
-    @Bean //CharacterEncodingFilter
-    fun characterEncodingFilter(): CharacterEncodingFilter {
-        val characterEncodingFilter = CharacterEncodingFilter()
-        characterEncodingFilter.encoding = "UTF-8"
-        characterEncodingFilter.setForceEncoding(true)
-        return characterEncodingFilter
-    }
-
-
-    @Bean
-    fun tilesConfigurer(): TilesConfigurer? {
-        val configurer = TilesConfigurer()
-        configurer.setDefinitions("classpath:tiles.xml")
-        configurer.setCheckRefresh(true)
-        return configurer
     }
 
     @Bean
@@ -110,8 +110,7 @@ class MvcConfig : WebMvcConfigurer {
         return viewResolver
     }
 
-    //뷰 리졸버
-    @Bean
+    @Bean //뷰 리졸버
     fun getInternalResourceViewResolver(): InternalResourceViewResolver {
         val viewResolver = InternalResourceViewResolver()
         viewResolver.setViewClass(org.springframework.web.servlet.view.JstlView::class.java)
@@ -121,21 +120,7 @@ class MvcConfig : WebMvcConfigurer {
         return viewResolver
     }
 
-    @Bean
-    fun jsonview(): MappingJackson2JsonView {
-        val viewResolver = MappingJackson2JsonView()
-        viewResolver.setPrettyPrint(true)
-        return viewResolver
-    }
-
-
-    @Bean
-    fun interceptorHandler(): InterceptorHandler {
-        return InterceptorHandler()
-    }
-
-    //json
-    @Bean
+    @Bean //json
     fun JacksonConverter(): MappingJackson2HttpMessageConverter {
         val converter = MappingJackson2HttpMessageConverter()
         val mediatype = ArrayList<MediaType>()
@@ -144,8 +129,15 @@ class MvcConfig : WebMvcConfigurer {
         return converter
     }
 
-    //String
-    @Bean
+    @Bean //CharacterEncodingFilter
+    fun characterEncodingFilter(): CharacterEncodingFilter {
+        val characterEncodingFilter = CharacterEncodingFilter()
+        characterEncodingFilter.encoding = "UTF-8"
+        characterEncodingFilter.setForceEncoding(true)
+        return characterEncodingFilter
+    }
+
+    @Bean //String
     fun StringConverter(): StringHttpMessageConverter {
         val converter = StringHttpMessageConverter(Charset.forName("UTF-8"))
         val mediatype = ArrayList<MediaType>()
@@ -155,8 +147,16 @@ class MvcConfig : WebMvcConfigurer {
         return converter
     }
 
+    @Bean
+    fun tilesConfigurer(): TilesConfigurer? {
+        val configurer = TilesConfigurer()
+        configurer.setDefinitions("classpath:tiles.xml")
+        configurer.setCheckRefresh(true)
+        return configurer
+    }
+
     //Multipartresolver
-    @Bean(name = arrayOf("multipartResolver"))
+    @Bean(name = ["multipartResolver"])
     @Throws(IOException::class)
     fun multipartResolver(): CommonsMultipartResolver {
         val multipartresolver = CommonsMultipartResolver()
@@ -167,18 +167,27 @@ class MvcConfig : WebMvcConfigurer {
         return multipartresolver
     }
 
-    @Bean(name = arrayOf("downloadView"))
+    @Bean(name = ["downloadView"])
     fun downloadview(): DownloadView {
         return DownloadView()
     }
 
-    @Bean(name = arrayOf("ExcelDownView"))
+    @Bean(name = ["ExcelDownView"])
     fun excelDownLoadView(): ExcelDownloadView {
         return ExcelDownloadView()
     }
 
-    @Bean(name = arrayOf("PrintView"))
+    @Bean(name = ["PrintView"])
     fun printview(): PrintView {
         return PrintView()
     }
+
+    @Bean(name = ["jsonview"])
+    fun jsonview(): MappingJackson2JsonView {
+        val viewResolver = MappingJackson2JsonView()
+        viewResolver.setPrettyPrint(true)
+        return viewResolver
+    }
+
+
 }

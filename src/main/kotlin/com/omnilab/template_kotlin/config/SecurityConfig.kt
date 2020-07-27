@@ -1,13 +1,18 @@
-package com.omnilab.template_kotlin.config.security
+package com.omnilab.template_kotlin.config
 
 import com.omnilab.template_kotlin.config.handler.AuthenticationHandler
-import net.sf.log4jdbc.Log4jdbcProxyDataSource
+import com.omnilab.template_kotlin.config.handler.LoginFailHandler
+import com.omnilab.template_kotlin.config.handler.LoginSuccessHandler
+import com.omnilab.template_kotlin.service.CustomAuthenticationProvider
+
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.web.firewall.StrictHttpFirewall
 import org.springframework.security.web.firewall.HttpFirewall
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+
 import java.util.EnumSet
+
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -19,25 +24,17 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
+
 import javax.servlet.DispatcherType
 import javax.servlet.Filter
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository
 
 @EnableWebSecurity
-open class SecurityConfig: WebSecurityConfigurerAdapter() {
-
-    @Autowired
-    private lateinit var dataSource: Log4jdbcProxyDataSource
+class SecurityConfig: WebSecurityConfigurerAdapter() {
 
     @Autowired
     private lateinit var authenticationhandler: AuthenticationHandler
 
     @Autowired
-    private lateinit var customUserDetailService: CustomUserDetailService
-
-    @Autowired
-    @Qualifier("CustomAuthenticationProvider")
     private lateinit var customAuthenticationProvider: CustomAuthenticationProvider
 
     @Throws(Exception::class)
@@ -65,8 +62,8 @@ open class SecurityConfig: WebSecurityConfigurerAdapter() {
                 .loginProcessingUrl("/login.service")
                 .usernameParameter("id")
                 .passwordParameter("password")
-                .successHandler(LoginSuccessService())
-                .failureHandler(LoginFailService())
+                .successHandler(LoginSuccessHandler())
+                .failureHandler(LoginFailHandler())
                 // 로그아웃 설정
             .and()
                 .logout()
@@ -86,8 +83,6 @@ open class SecurityConfig: WebSecurityConfigurerAdapter() {
                 .rememberMeParameter("remember_me")
                 .rememberMeCookieName("YUMRE")
                 .tokenValiditySeconds(864000)
-                .tokenRepository(persistentTokenRepository())
-                .userDetailsService(customUserDetailService)
             .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.NEVER)
@@ -121,11 +116,4 @@ open class SecurityConfig: WebSecurityConfigurerAdapter() {
         return firewall
     }
 
-    // create table persistent_logins (username varchar(64) not null, series varchar(64) primary key, token varchar(64) not null, last_used timestamp not null);
-    @Bean
-    fun persistentTokenRepository(): PersistentTokenRepository {
-        val db = JdbcTokenRepositoryImpl()
-        db.setDataSource(dataSource)
-        return db
-    }
 }
