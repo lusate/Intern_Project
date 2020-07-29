@@ -44,8 +44,8 @@ class MvcConfig : WebMvcConfigurer {
         registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/")
         registry.addResourceHandler("/media/**").addResourceLocations("classpath:/static/media/")
         registry.addResourceHandler("/inc/**").addResourceLocations("classpath:/static/inc/")
-        registry.addResourceHandler("/favicon.ico").addResourceLocations("classpath:/static/favicon.ico")
         registry.addResourceHandler("/html/**").addResourceLocations("classpath:/static/html/")
+        registry.addResourceHandler("/favicon.ico").addResourceLocations("classpath:/favicon.ico")
     }
 
     override fun addViewControllers(registry: ViewControllerRegistry) {
