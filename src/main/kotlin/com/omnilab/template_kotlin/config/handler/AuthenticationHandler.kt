@@ -20,7 +20,6 @@ class AuthenticationHandler: AuthenticationEntryPoint, AccessDeniedHandler {
 
     override fun commence(req: HttpServletRequest, rep: HttpServletResponse, authException: AuthenticationException) {
         logger.error(req.requestURI)
-		//authException.printStackTrace()
 		req.characterEncoding = "UTF-8"
         rep.contentType = "text/html; charset=UTF-8"
         val out = rep.writer

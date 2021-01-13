@@ -29,24 +29,38 @@ import org.springframework.transaction.interceptor.TransactionInterceptor
 import net.sf.log4jdbc.Log4jdbcProxyDataSource
 import net.sf.log4jdbc.tools.Log4JdbcCustomFormatter
 import net.sf.log4jdbc.tools.LoggingType
+import org.slf4j.LoggerFactory
 
 @Configuration
 @EnableTransactionManagement
 internal class DatabaseConfig {
 
+    private val log = LoggerFactory.getLogger(this.javaClass)
+
     @Autowired
     private lateinit var applicationContext: ApplicationContext
 
-    @Value("\${variable.db-secret-var}")
-    private val passwd: String? = null
+    @Value("\${variable.db-class}")
+    private val db_class: String? = null
 
-    @Bean(destroyMethod = "close")
+    @Value("\${variable.db-url}")
+    private val db_url: String? = null
+
+    @Value("\${variable.db-username}")
+    private val db_username: String? = null
+
+    @Value("\${variable.db-password}")
+    private val db_password: String? = null
+
+
+
+    @Bean(destroyMethod = "postDeregister")
     fun configureDataSource(): BasicDataSource {
         val dataSource = BasicDataSource()
-        dataSource.driverClassName = "org.mariadb.jdbc.Driver"
-        dataSource.url = "jdbc:mariadb://127.0.0.1:3306/test"
-        dataSource.username = "root"
-        dataSource.password = passwd
+        dataSource.driverClassName = db_class
+        dataSource.url = db_url
+        dataSource.username = db_username
+        dataSource.password = db_password
         dataSource.initialSize = 2 // 최초 커넥션 풀에 채원 넣을 커넥션 수
         dataSource.maxTotal = 50
         dataSource.maxIdle = 20 // 커넥션 풀에 반납할 때 최대로 유지될 수 있는 커넥션 수

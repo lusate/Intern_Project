@@ -18,6 +18,9 @@ import org.springframework.web.filter.CharacterEncodingFilter
 import org.springframework.web.multipart.commons.CommonsMultipartResolver
 import org.springframework.web.servlet.DispatcherServlet
 import org.springframework.web.servlet.config.annotation.*
+import org.springframework.web.servlet.resource.EncodedResourceResolver
+import org.springframework.web.servlet.resource.GzipResourceResolver
+import org.springframework.web.servlet.resource.PathResourceResolver
 import org.springframework.web.servlet.view.BeanNameViewResolver
 import org.springframework.web.servlet.view.InternalResourceViewResolver
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView
@@ -27,6 +30,7 @@ import org.springframework.web.servlet.view.tiles3.TilesViewResolver
 import java.io.IOException
 import java.nio.charset.Charset
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 @Configuration
 @EnableWebMvc
@@ -38,14 +42,14 @@ class MvcConfig : WebMvcConfigurer {
     }
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
-        registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/")
-        registry.addResourceHandler("/font/**").addResourceLocations("classpath:/static/font/")
-        registry.addResourceHandler("/img/**").addResourceLocations("classpath:/static/img/")
-        registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/")
-        registry.addResourceHandler("/media/**").addResourceLocations("classpath:/static/media/")
-        registry.addResourceHandler("/inc/**").addResourceLocations("classpath:/static/inc/")
-        registry.addResourceHandler("/html/**").addResourceLocations("classpath:/static/html/")
-        registry.addResourceHandler("/favicon.ico").addResourceLocations("classpath:/favicon.ico")
+        registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/").setCachePeriod(TimeUnit.DAYS.toSeconds(7).toInt()).resourceChain(true).addResolver(EncodedResourceResolver()).addResolver(PathResourceResolver())
+        registry.addResourceHandler("/font/**").addResourceLocations("classpath:/static/font/").setCachePeriod(TimeUnit.DAYS.toSeconds(7).toInt()).resourceChain(true).addResolver(EncodedResourceResolver()).addResolver(PathResourceResolver())
+        registry.addResourceHandler("/img/**").addResourceLocations("classpath:/static/img/").setCachePeriod(TimeUnit.DAYS.toSeconds(7).toInt()).resourceChain(true).addResolver(EncodedResourceResolver()).addResolver(PathResourceResolver())
+        registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/").setCachePeriod(TimeUnit.DAYS.toSeconds(7).toInt()).resourceChain(true).addResolver(EncodedResourceResolver()).addResolver(PathResourceResolver())
+        registry.addResourceHandler("/media/**").addResourceLocations("classpath:/static/media/").setCachePeriod(TimeUnit.DAYS.toSeconds(7).toInt()).resourceChain(true).addResolver(EncodedResourceResolver()).addResolver(PathResourceResolver())
+        registry.addResourceHandler("/inc/**").addResourceLocations("classpath:/static/inc/").setCachePeriod(TimeUnit.DAYS.toSeconds(7).toInt()).resourceChain(true).addResolver(EncodedResourceResolver()).addResolver(PathResourceResolver())
+        registry.addResourceHandler("/html/**").addResourceLocations("classpath:/static/html/").setCachePeriod(TimeUnit.DAYS.toSeconds(7).toInt()).resourceChain(true).addResolver(EncodedResourceResolver()).addResolver(PathResourceResolver())
+        registry.addResourceHandler("/favicon.ico").addResourceLocations("classpath:/favicon.ico").setCachePeriod(TimeUnit.DAYS.toSeconds(7).toInt()).resourceChain(true).addResolver(EncodedResourceResolver()).addResolver(PathResourceResolver())
     }
 
     override fun addViewControllers(registry: ViewControllerRegistry) {
