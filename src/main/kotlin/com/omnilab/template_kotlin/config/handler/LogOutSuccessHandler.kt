@@ -22,12 +22,6 @@ class LogOutSuccessHandler : LogoutSuccessHandler {
                 log.error("session invalidate Error {} : {}", e.javaClass.name, e.message)
             }
         }
-        val serverPort: String
-        serverPort = if (req.remotePort == 80) {
-            ""
-        } else {
-            req.serverPort.toString()
-        }
         rep.sendRedirect("/index")
     }
 }

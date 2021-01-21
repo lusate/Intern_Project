@@ -1,25 +1,30 @@
 package com.mablic.template_kotlin
 
-import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.encryption.pbe.PooledPBEStringEncryptor
+import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class JasyptEnc {
+
 }
 
+private val log: Logger = LoggerFactory.getLogger("JasyptEnc")
+
 fun main(args: Array<String>) {
-	
-    val mpCryptoPassword = "milvussteve"
-    val value = "jdbc:sqlserver://121.78.116.235:1433;DatabaseName=adi_dwn_test;integratedSecurity=false;"
+    val enc = PooledPBEStringEncryptor()
+    val config = SimpleStringPBEConfig()
+    config.password = "APP_ENCTYPTION_PASSWORD"
+    config.algorithm = "PBEWITHHMACSHA512ANDAES_256"
+    config.setKeyObtentionIterations("1000")
+    config.poolSize = 1
+    config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator")
+    config.setIvGeneratorClassName("org.jasypt.iv.RandomIvGenerator")
+    config.stringOutputType = "base64"
+    enc.setConfig(config)
 
-    println("Original Value : $value")
-    val encryptor = StandardPBEStringEncryptor()
-    encryptor.setAlgorithm("PBEWithMD5AndDES")
+    log.error("=========================")
+    log.error(enc.encrypt("qewqeqweqwe"))
+    log.error("=========================")
 
-    encryptor.setPassword(mpCryptoPassword)
-    val encryptedPassword = encryptor.encrypt(value)
-    println(encryptedPassword)
-
-    val decryptor = StandardPBEStringEncryptor()
-    decryptor.setPassword(mpCryptoPassword)
-    System.out.println(decryptor.decrypt(encryptedPassword))
- 	
 }

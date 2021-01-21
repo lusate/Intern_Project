@@ -8,8 +8,10 @@ import com.omnilab.template_kotlin.config.view.PrintView
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.core.io.FileSystemResource
 import org.springframework.http.MediaType
+import org.springframework.http.converter.ByteArrayHttpMessageConverter
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.http.converter.StringHttpMessageConverter
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
@@ -17,9 +19,11 @@ import org.springframework.mobile.device.DeviceResolverRequestFilter
 import org.springframework.web.filter.CharacterEncodingFilter
 import org.springframework.web.multipart.commons.CommonsMultipartResolver
 import org.springframework.web.servlet.DispatcherServlet
+import org.springframework.web.servlet.LocaleResolver
 import org.springframework.web.servlet.config.annotation.*
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor
+import org.springframework.web.servlet.i18n.SessionLocaleResolver
 import org.springframework.web.servlet.resource.EncodedResourceResolver
-import org.springframework.web.servlet.resource.GzipResourceResolver
 import org.springframework.web.servlet.resource.PathResourceResolver
 import org.springframework.web.servlet.view.BeanNameViewResolver
 import org.springframework.web.servlet.view.InternalResourceViewResolver
@@ -29,8 +33,10 @@ import org.springframework.web.servlet.view.tiles3.TilesView
 import org.springframework.web.servlet.view.tiles3.TilesViewResolver
 import java.io.IOException
 import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 @Configuration
 @EnableWebMvc
@@ -63,8 +69,8 @@ class MvcConfig : WebMvcConfigurer {
     override fun configureMessageConverters(converters: MutableList<HttpMessageConverter<*>>) {
         converters.add(JacksonConverter())
         converters.add(StringConverter())
+        converters.add(byteArrayHttpMessageConverter())
     }
-
 
     @Bean // naver-lucy-filter
     fun xssEscapeServletFilter(): FilterRegistrationBean<XssEscapeServletFilter> {
@@ -124,6 +130,30 @@ class MvcConfig : WebMvcConfigurer {
         return viewResolver
     }
 
+    @Bean // 로케일 리졸버
+    fun localResolver(): LocaleResolver {
+        val re = SessionLocaleResolver()
+        re.setDefaultLocale(Locale.KOREA)
+        return re
+    }
+
+    @Bean
+    fun localeChangeInterceptor() : LocaleChangeInterceptor {
+        val re = LocaleChangeInterceptor()
+        re.paramName = "ln"
+        return re
+    }
+
+    @Bean
+    fun messageSource(): ReloadableResourceBundleMessageSource {
+        val re = ReloadableResourceBundleMessageSource()
+        re.setBasename("classpath:/locale/messages")
+        re.setDefaultEncoding(StandardCharsets.UTF_8.toString())
+        re.setUseCodeAsDefaultMessage(true)
+        re.setCacheSeconds(60)
+        return re
+    }
+
     @Bean //json
     fun JacksonConverter(): MappingJackson2HttpMessageConverter {
         val converter = MappingJackson2HttpMessageConverter()
@@ -148,6 +178,18 @@ class MvcConfig : WebMvcConfigurer {
         mediatype.add(MediaType.TEXT_HTML)
         mediatype.add(MediaType.APPLICATION_XML)
         converter.supportedMediaTypes = mediatype
+        return converter
+    }
+
+    @Bean
+    fun byteArrayHttpMessageConverter(): ByteArrayHttpMessageConverter {
+        val converter = ByteArrayHttpMessageConverter()
+        val mediaType = ArrayList<MediaType>()
+        mediaType.add(MediaType.IMAGE_JPEG)
+        mediaType.add(MediaType.IMAGE_GIF)
+        mediaType.add(MediaType.IMAGE_PNG)
+        mediaType.add(MediaType.APPLICATION_OCTET_STREAM)
+        converter.supportedMediaTypes = mediaType
         return converter
     }
 
@@ -192,6 +234,5 @@ class MvcConfig : WebMvcConfigurer {
         viewResolver.setPrettyPrint(true)
         return viewResolver
     }
-
 
 }

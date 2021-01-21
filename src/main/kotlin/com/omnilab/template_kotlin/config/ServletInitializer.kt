@@ -21,10 +21,10 @@ class ServletInitializer : SpringBootServletInitializer() {
 	}
 
 	override fun onStartup(servletContext: ServletContext) {
-		super.onStartup(servletContext)
 		servletContext.addListener(RequestContextListener())
 		servletContext.addListener(HttpSessionEventPublisher())
 		servletContext.addListener(SessionListener())
+		super.onStartup(servletContext)
 	}
 }
 

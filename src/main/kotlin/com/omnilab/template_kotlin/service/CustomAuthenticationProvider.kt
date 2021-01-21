@@ -28,6 +28,7 @@ class CustomAuthenticationProvider : AuthenticationProvider {
     override fun authenticate(auth: Authentication): Authentication {
         val user_id = auth.principal.toString()
         val user_pw = auth.credentials.toString()
+
         var ip = CommonUtils.clientip(request)
         if (ip == "0:0:0:0:0:0:0:1")
             ip = "127.0.0.1"
@@ -44,4 +45,5 @@ class CustomAuthenticationProvider : AuthenticationProvider {
     override fun supports(auth: Class<*>): Boolean {
         return auth == UsernamePasswordAuthenticationToken::class.java
     }
+
 }
