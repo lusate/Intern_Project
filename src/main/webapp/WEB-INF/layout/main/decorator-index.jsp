@@ -6,8 +6,15 @@
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
-<c:set var="url">${pageContext.request.requestURL}</c:set>
-<c:set var="baseURL" value="${fn:replace(url, pageContext.request.requestURI, pageContext.request.contextPath)}" />
+<c:set var="req" value="${pageContext.request}" />
+<c:choose>
+	<c:when test="${header['X-Forwarded-Proto'] eq 'https'}">
+		<c:set var="baseURL" value="https://${req.serverName}${req.contextPath}" />
+	</c:when>
+	<c:otherwise>
+		<c:set var="baseURL" value="${req.scheme}://${req.serverName}:${req.serverPort}${req.contextPath}" />
+	</c:otherwise>
+</c:choose>
 <!DOCTYPE html>
 <html>
 	<head>
