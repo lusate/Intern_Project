@@ -24,7 +24,7 @@ class TestController {
     @Qualifier("TEMPLATEServiceImpl")
     private lateinit var service: TEMPLATEService
 
-    @RequestMapping(value = arrayOf("/index"), method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = arrayOf("/index", "/index.mi"), method = arrayOf(RequestMethod.GET))
     fun index(): ModelAndView {
 		val view = ModelAndView("index")
         return view
