@@ -52,11 +52,11 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
         httpSecurity.addFilterBefore(filter, CsrfFilter::class.java)
                 .csrf().ignoringAntMatchers("/rest/**", "/api/**")
             .and()
-                .authorizeRequests().antMatchers("/", "/index", "/login", "/loginProcess.service", "/logout.service", "/test", "/error").permitAll()
+                .authorizeRequests().antMatchers("/", "/index", "/login", "/loginProcess.service", "/logout.service", "/error", "/cimg/**", "/cimgd/**").permitAll()
             .and()
                 .authorizeRequests().anyRequest().authenticated()
-                // 로그인 설정
-                .and()
+            // 로그인 설정
+            .and()
                 .formLogin()
                 .loginPage("/index")
                 .loginProcessingUrl("/login.service")
@@ -64,19 +64,19 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
                 .passwordParameter("password")
                 .successHandler(LoginSuccessHandler())
                 .failureHandler(LoginFailHandler())
-                // 로그아웃 설정
+            // 로그아웃 설정
             .and()
                 .logout()
                 .logoutUrl("/logout.service")
                 .logoutSuccessUrl("/index")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID", "TEMPLATE")
-                // 해들링 설정
+            // 해들링 설정
             .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationhandler)
                 .accessDeniedHandler(authenticationhandler)
-                // remember me 설정
+            // remember me 설정
             .and()
                 .rememberMe()
                 .key("template")

@@ -26,15 +26,6 @@
 		<script type="text/javascript" src="/js/jquery.validate.min.js"></script>
 	</head>
 	<body>
-		index body
-		<br/>
-		<br/>
-		<c:if test="${index}">
-			<tiles:insertAttribute name="${index_view}" />
-		</c:if>
-		<br/>
-		<c:if test="${index2}">
-			<tiles:insertAttribute name="${index2_view}" />
-		</c:if>
+		<tiles:insertAttribute name="body" />
 	</body>
 </html>
