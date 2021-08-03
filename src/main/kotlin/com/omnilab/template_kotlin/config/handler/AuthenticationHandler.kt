@@ -1,5 +1,6 @@
 package com.omnilab.template_kotlin.config.handler
 
+import com.omnilab.template_kotlin.common.CommonUtils
 import org.slf4j.LoggerFactory
 
 import org.springframework.security.core.AuthenticationException
@@ -19,7 +20,7 @@ class AuthenticationHandler: AuthenticationEntryPoint, AccessDeniedHandler {
     val logger = LoggerFactory.getLogger(this::class.java)
 
     override fun commence(req: HttpServletRequest, rep: HttpServletResponse, authException: AuthenticationException) {
-        logger.error(req.requestURI)
+        logger.error("commence {}, {} | {}", CommonUtils.clientip(req), req.requestURI, authException.message)
 		req.characterEncoding = "UTF-8"
         rep.contentType = "text/html; charset=UTF-8"
         val out = rep.writer
@@ -31,8 +32,8 @@ class AuthenticationHandler: AuthenticationEntryPoint, AccessDeniedHandler {
         out.close()
     }
 
-    override fun handle(req: HttpServletRequest, rep: HttpServletResponse, accessDeniedException: AccessDeniedException?) {
-        logger.error(req.requestURI)
+    override fun handle(req: HttpServletRequest, rep: HttpServletResponse, accessDeniedException: AccessDeniedException) {
+        logger.error("handle {} | {}", req.requestURI, accessDeniedException.message)
         req.characterEncoding = "UTF-8"
         rep.contentType = "text/html; charset=UTF-8"
         val out = rep.writer
@@ -44,7 +45,6 @@ class AuthenticationHandler: AuthenticationEntryPoint, AccessDeniedHandler {
                 rep.sendError(HttpServletResponse.SC_UNAUTHORIZED)
             }
             else -> {
-                //logger.error(request.requestURL, accessDeniedException)
                 out.print("<script>")
                 out.print("alert('로그인된 사용자만 이용할 수 있습니다.');")
                 out.print("location.href='/index.do';")

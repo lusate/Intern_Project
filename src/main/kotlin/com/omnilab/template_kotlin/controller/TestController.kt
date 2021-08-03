@@ -1,15 +1,22 @@
 package com.omnilab.template_kotlin.controller
 
-import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.beans.factory.annotation.Autowired
+import com.omnilab.template_kotlin.common.CommonUtils
 import com.omnilab.template_kotlin.service.TEMPLATEService
-import org.slf4j.Logger
+import org.apache.commons.codec.binary.Base64
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.servlet.ModelAndView
+import java.awt.image.BufferedImage
+import java.io.ByteArrayOutputStream
+import java.net.URL
+import java.nio.charset.StandardCharsets
+import javax.imageio.ImageIO
 
 @Controller
 class TestController {
@@ -22,14 +29,32 @@ class TestController {
 
     @RequestMapping(value = arrayOf("/index"), method = arrayOf(RequestMethod.GET))
     fun index(): ModelAndView {
-		//logger.error(service.test());
-        val view = ModelAndView("index")
-        view.addObject("index", true)
-        view.addObject("index2", true)
-        view.addObject("index_view", "body")
-        view.addObject("index2_view", "body2")
-        view.addObject("test", "테스트 밸류")
-        view.addObject("test2", "테스트2 벨류")
+		val view = ModelAndView("index")
+        return view
+    }
+
+    @GetMapping("/img/{path}")
+    fun getImage(@PathVariable("path") path: String): ModelAndView {
+        val view = ModelAndView("img")
+        var imgStr = ""
+        val url = CommonUtils.encodeURI(path)
+        try{
+            val u = URL(url)
+            val img: BufferedImage = ImageIO.read(u)
+            val bos = ByteArrayOutputStream()
+            ImageIO.write(img, "PNG", bos)
+            imgStr = String(Base64.encodeBase64(bos.toByteArray()), StandardCharsets.UTF_8)
+        }catch (e: Exception){
+            logger.error("IMG ERROR", e)
+        }
+        view.addObject("img", imgStr)
+        return view
+    }
+
+    @GetMapping("/imgd/{path}")
+    fun getImaged(@PathVariable("path") path: String): ModelAndView {
+        val view = ModelAndView("imgd")
+        view.addObject("img", CommonUtils.encodeURI(path))
         return view
     }
 

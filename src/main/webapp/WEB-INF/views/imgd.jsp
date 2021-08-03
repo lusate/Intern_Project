@@ -12,6 +12,6 @@
 <head>
 </head>
 <body>
-	Test Page
+    <img src="${img}" style="position:fixed; display:block; height:100%; left:50%; top:0; transform:translateX(-50%);">
 </body>
 </html>

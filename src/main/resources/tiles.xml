@@ -19,9 +19,17 @@
     </definition>
 -->
 
-    <definition name="index" extends="main-layout">
-        <put-attribute name="body" value="/WEB-INF/views/index.jsp" />
-        <put-attribute name="body2" value="/WEB-INF/views/index2.jsp" />
+    <!-- default -->
+    <definition name="*" extends="main-layout">
+        <put-attribute name="body" value="/WEB-INF/views/{1}.jsp"/>
+    </definition>
+
+    <definition name="*/*" extends="main-layout">
+        <put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp"/>
+    </definition>
+
+    <definition name="*/*/*" extends="main-layout">
+        <put-attribute name="body" value="/WEB-INF/views/{1}/{2}/{3}.jsp"/>
     </definition>
 
 </tiles-definitions>

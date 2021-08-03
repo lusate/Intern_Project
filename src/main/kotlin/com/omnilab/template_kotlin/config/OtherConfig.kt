@@ -1,6 +1,7 @@
 package com.omnilab.template_kotlin.config
 
 import com.omnilab.template_kotlin.common.ImagePaginationRenderer
+import com.omnilab.template_kotlin.config.handler.RestTemplateErrorHandler
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.integration.config.EnableIntegration
@@ -8,11 +9,16 @@ import org.springframework.integration.config.EnableIntegration
 import egovframework.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationRenderer
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationRenderer
 import egovframework.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationManager
+import org.apache.http.impl.client.HttpClientBuilder
+import org.springframework.boot.web.client.RestTemplateBuilder
 
 import org.springframework.context.annotation.Bean
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import org.springframework.mail.javamail.JavaMailSenderImpl
 import org.springframework.mail.javamail.JavaMailSender
+import org.springframework.web.client.RestTemplate
+import java.time.Duration
 
 import java.util.*
 
@@ -58,6 +64,25 @@ class OtherConfig {
         map["text"] = DefaultPaginationRenderer()
         manager.setRendererType(map)
         return manager
+    }
+
+    @Bean(name = ["restTemplate"])
+    fun restTemplate(): RestTemplate {
+        val factorty = HttpComponentsClientHttpRequestFactory()
+        factorty.setReadTimeout(5000)
+        factorty.setConnectTimeout(3000)
+        val httpClient = HttpClientBuilder.create()
+                .setMaxConnTotal(100)
+                .setMaxConnPerRoute(5)
+                .build()
+        factorty.httpClient = httpClient
+
+        val restTemplateBuilder = RestTemplateBuilder()
+                .requestFactory { factorty }
+                .errorHandler(RestTemplateErrorHandler())
+                .setConnectTimeout(Duration.ofMinutes(3))
+                .build()
+        return restTemplateBuilder
     }
 
 }

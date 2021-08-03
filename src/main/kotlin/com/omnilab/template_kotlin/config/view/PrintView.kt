@@ -1,5 +1,6 @@
 package com.omnilab.template_kotlin.config.view
 
+import org.slf4j.LoggerFactory
 import org.springframework.web.servlet.view.AbstractView
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -14,6 +15,8 @@ import java.io.IOException
 
 class PrintView: AbstractView() {
 
+    val logger = LoggerFactory.getLogger(this::javaClass.name)
+
     override fun getContentType(): String? {
         return "text/html; charset=UTF-8"
     }
@@ -26,7 +29,7 @@ class PrintView: AbstractView() {
                 out.flush()
             }
         } catch (e: IOException) {
-            e.printStackTrace()
+            logger.error("PrintView", e)
         }
     }
 }

@@ -10,6 +10,6 @@ jasypt:
 variable:
   db-class: org.mariadb.jdbc.Driver
   db-url: jdbc:mariadb://127.0.0.1:3306/test
-  db-username: test
-  #db-password: ENC(IP3s9D0dWuxQmTsZU6UAnA==)
-  db-password: test
+  db-username: ENC(bIvGp1nwv93dDalDAoX3XCMGOh/E0zrjwbggFBq62zCmq/2apMU7TcPzK4UisYVE)
+  db-password: ENC(bIvGp1nwv93dDalDAoX3XCMGOh/E0zrjwbggFBq62zCmq/2apMU7TcPzK4UisYVE)
+

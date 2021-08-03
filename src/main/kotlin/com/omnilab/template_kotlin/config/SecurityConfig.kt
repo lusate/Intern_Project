@@ -70,7 +70,7 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
                 .logoutUrl("/logout.service")
                 .logoutSuccessUrl("/index")
                 .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID", "YUMRE")
+                .deleteCookies("JSESSIONID", "TEMPLATE")
                 // 해들링 설정
             .and()
                 .exceptionHandling()
@@ -79,9 +79,9 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
                 // remember me 설정
             .and()
                 .rememberMe()
-                .key("yummirific")
+                .key("template")
                 .rememberMeParameter("remember_me")
-                .rememberMeCookieName("YUMRE")
+                .rememberMeCookieName("TEMPLATE")
                 .tokenValiditySeconds(864000)
             .and()
                 .sessionManagement()
@@ -113,6 +113,7 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
         val firewall = StrictHttpFirewall()
         //firewall.setAllowUrlEncodedPercent(true);
         firewall.setAllowUrlEncodedSlash(true)
+        firewall.setAllowUrlEncodedDoubleSlash(true)
         return firewall
     }
 

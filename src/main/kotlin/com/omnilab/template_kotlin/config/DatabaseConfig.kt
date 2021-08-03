@@ -30,6 +30,8 @@ import net.sf.log4jdbc.Log4jdbcProxyDataSource
 import net.sf.log4jdbc.tools.Log4JdbcCustomFormatter
 import net.sf.log4jdbc.tools.LoggingType
 import org.slf4j.LoggerFactory
+import org.springframework.jdbc.BadSqlGrammarException
+import java.sql.SQLException
 
 @Configuration
 @EnableTransactionManagement
@@ -97,14 +99,21 @@ internal class DatabaseConfig {
         val txAttributes = Properties()
 
         val rollbackRules = ArrayList<RollbackRuleAttribute>()
+        rollbackRules.add(RollbackRuleAttribute(java.lang.Exception::class.java))
+        rollbackRules.add(RollbackRuleAttribute(SQLException::class.java))
+        rollbackRules.add(RollbackRuleAttribute(BadSqlGrammarException::class.java))
         rollbackRules.add(RollbackRuleAttribute(Exception::class.java))
 
-        val readOnlyAttribute = DefaultTransactionAttribute(TransactionDefinition.PROPAGATION_REQUIRED)
+        //val readOnlyAttribute = DefaultTransactionAttribute(TransactionDefinition.PROPAGATION_REQUIRED)
+        val readOnlyAttribute = DefaultTransactionAttribute(TransactionDefinition.PROPAGATION_REQUIRES_NEW)
         readOnlyAttribute.isReadOnly = true
+
         //readOnlyAttribute.setTimeout(10);
         readOnlyAttribute.timeout = -1
 
-        val writeAttribute = RuleBasedTransactionAttribute(TransactionDefinition.PROPAGATION_REQUIRED, rollbackRules)
+
+        //val writeAttribute = RuleBasedTransactionAttribute(TransactionDefinition.PROPAGATION_REQUIRES_NEW, rollbackRules)
+        val writeAttribute = RuleBasedTransactionAttribute(TransactionDefinition.PROPAGATION_REQUIRES_NEW, rollbackRules)
         writeAttribute.timeout = -1
 
         val readOnlyTransactionAttributesDefinition = readOnlyAttribute.toString()
@@ -113,7 +122,7 @@ internal class DatabaseConfig {
         //log.info("Write Attributes :: {}", writeTransactionAttributesDefinition);
 
         // read-only
-        txAttributes.setProperty("select*", readOnlyTransactionAttributesDefinition)
+        txAttributes.setProperty("sel*", readOnlyTransactionAttributesDefinition)
         txAttributes.setProperty("get*", readOnlyTransactionAttributesDefinition)
         txAttributes.setProperty("list*", readOnlyTransactionAttributesDefinition)
         txAttributes.setProperty("count*", readOnlyTransactionAttributesDefinition)
@@ -129,9 +138,7 @@ internal class DatabaseConfig {
     fun txAdviceAdvisor(): Advisor {
         val pointcut = AspectJExpressionPointcut()
         //pointcut.setExpression("(execution(* *..*.service..*.*(..)) || execution(* *..*.services..*.*(..)))");
-        pointcut.expression = "execution(* com.template.service..*.*(..))"
         pointcut.expression = "execution(* com.template.repository..*.*(..))"
-        pointcut.expression = "execution(* com.template.controller..*.*(..))"
         return DefaultPointcutAdvisor(pointcut, txAdvice())
     }
 
@@ -140,7 +147,7 @@ internal class DatabaseConfig {
     fun SqlSessionFactory(): SqlSessionFactory? {
         val sessionFactoryBean = SqlSessionFactoryBean()
         sessionFactoryBean.setDataSource(dataSource())
-        sessionFactoryBean.setTypeAliasesPackage("com.ecommerce.model")
+        sessionFactoryBean.setTypeAliasesPackage("com.omnilab.template_kotlin.model")
         sessionFactoryBean.setConfigLocation(applicationContext.getResource("classpath:mybatis/mybatis-config.xml"))
         sessionFactoryBean.setMapperLocations(*applicationContext.getResources("classpath:mybatis/mapper/*.xml"))
         return sessionFactoryBean.getObject()

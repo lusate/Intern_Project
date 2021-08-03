@@ -14,7 +14,7 @@ private val log: Logger = LoggerFactory.getLogger("JasyptEnc")
 fun main(args: Array<String>) {
     val enc = PooledPBEStringEncryptor()
     val config = SimpleStringPBEConfig()
-    config.password = "APP_ENCTYPTION_PASSWORD"
+    config.password = "milvussteve"
     config.algorithm = "PBEWITHHMACSHA512ANDAES_256"
     config.setKeyObtentionIterations("1000")
     config.poolSize = 1
@@ -24,7 +24,8 @@ fun main(args: Array<String>) {
     enc.setConfig(config)
 
     log.error("=========================")
-    log.error(enc.encrypt("qewqeqweqwe"))
+    log.error(enc.encrypt("test"))
+    log.error(enc.decrypt("bIvGp1nwv93dDalDAoX3XCMGOh/E0zrjwbggFBq62zCmq/2apMU7TcPzK4UisYVE"))
     log.error("=========================")
 
 }
