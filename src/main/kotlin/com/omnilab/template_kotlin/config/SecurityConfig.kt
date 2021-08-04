@@ -87,7 +87,8 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.NEVER)
             .and()
-                .headers().frameOptions().disable()
+                //.headers().frameOptions().disable()
+                .headers().frameOptions().sameOrigin()
     }
 
     @Throws(Exception::class)
