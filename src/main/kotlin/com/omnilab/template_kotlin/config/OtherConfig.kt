@@ -10,6 +10,7 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationRenderer
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationRenderer
 import egovframework.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationManager
 import org.apache.http.impl.client.HttpClientBuilder
+import org.apache.http.impl.client.LaxRedirectStrategy
 import org.springframework.boot.web.client.RestTemplateBuilder
 
 import org.springframework.context.annotation.Bean
@@ -74,6 +75,7 @@ class OtherConfig {
         val httpClient = HttpClientBuilder.create()
                 .setMaxConnTotal(100)
                 .setMaxConnPerRoute(5)
+                .setRedirectStrategy(LaxRedirectStrategy())
                 .build()
         factorty.httpClient = httpClient
 

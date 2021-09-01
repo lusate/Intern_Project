@@ -52,7 +52,7 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
         httpSecurity.addFilterBefore(filter, CsrfFilter::class.java)
                 .csrf().ignoringAntMatchers("/rest/**", "/api/**")
             .and()
-                .authorizeRequests().antMatchers("/", "/index", "/login", "/loginProcess.service", "/logout.service", "/error", "/cimg/**", "/cimgd/**").permitAll()
+                .authorizeRequests().antMatchers("/", "/index", "/login", "/loginProcess.service", "/logout.service", "/error", "/cimg/**", "/cimgd/**", "/test/**").permitAll()
             .and()
                 .authorizeRequests().anyRequest().authenticated()
             // 로그인 설정

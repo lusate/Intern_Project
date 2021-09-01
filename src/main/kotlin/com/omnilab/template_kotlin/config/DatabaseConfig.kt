@@ -54,8 +54,6 @@ internal class DatabaseConfig {
     @Value("\${variable.db-password}")
     private val db_password: String? = null
 
-
-
     @Bean(destroyMethod = "postDeregister")
     fun configureDataSource(): BasicDataSource {
         val dataSource = BasicDataSource()

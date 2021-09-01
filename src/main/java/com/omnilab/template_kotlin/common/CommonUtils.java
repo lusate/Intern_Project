@@ -40,7 +40,7 @@ import org.springframework.validation.DataBinder;
 @SuppressWarnings("rawtypes")
 public class CommonUtils {
 
-    public static final Logger log = LoggerFactory.getLogger(CommonUtils.class);
+    public static final Logger logger = LoggerFactory.getLogger(CommonUtils.class);
 
     /**
      * @param : HttpServletRequest
@@ -72,6 +72,17 @@ public class CommonUtils {
             ip = req.getRemoteAddr();
         }
         return ip;
+    }
+
+    public static String getScheme(HttpServletRequest req) {
+        String scheme;
+        String proto = req.getHeader("x-forwarded-proto");
+        if (proto != null) {
+            scheme = "https".equals(proto) ? "https" : "http";
+        } else {
+            scheme = req.isSecure() ? "https" : "http";
+        }
+        return scheme;
     }
 
     /**
@@ -310,50 +321,16 @@ public class CommonUtils {
 
             md.update(message.getBytes());
             byte[] mb = md.digest();
-            for (int i = 0; i < mb.length; i++) {
-                byte temp = mb[i];
-                String s = Integer.toHexString(new Byte(temp));
+            for (byte temp : mb) {
+                StringBuilder s = new StringBuilder(Integer.toHexString(temp));
                 while (s.length() < 2) {
-                    s = "0" + s;
+                    s.insert(0, "0");
                 }
-                s = s.substring(s.length() - 2);
+                s = new StringBuilder(s.substring(s.length() - 2));
                 mes1.append(s);
             }
         } catch (NoSuchAlgorithmException e) {
-            System.err.println("|-------------- Sha512 Error : CommonUtils.java ------------------|");
-            //e.printStackTrace();
-        }
-        return mes1.toString();
-    }
-
-    /**
-     * @param : String
-     * @return : String
-     * @Method Name  : sha256
-     * @excetion : NoSuchAlgorithmException
-     * @version : 0.1
-     * @Method Description : Sha512 암호화
-     */
-    public static String sha256(String message) {
-        MessageDigest md;
-        StringBuilder mes1 = new StringBuilder();
-        try {
-            md = MessageDigest.getInstance("SHA-256");
-
-            md.update(message.getBytes());
-            byte[] mb = md.digest();
-            for (int i = 0; i < mb.length; i++) {
-                byte temp = mb[i];
-                String s = Integer.toHexString(new Byte(temp));
-                while (s.length() < 2) {
-                    s = "0" + s;
-                }
-                s = s.substring(s.length() - 2);
-                mes1.append(s);
-            }
-        } catch (NoSuchAlgorithmException e) {
-            System.err.println("|-------------- Sha256 Error : CommonUtils.java ------------------|");
-            //e.printStackTrace();
+            logger.error("|-------------- Sha512 Error : CommonUtils.java ------------------|", e);
         }
         return mes1.toString();
     }
@@ -469,17 +446,16 @@ public class CommonUtils {
     public static void ObjPrint(Object ob) {
         try {
             StringBuilder sb = new StringBuilder();
-            Object obj = ob;
-            for (Field field : obj.getClass().getDeclaredFields()) {
+            for (Field field : ob.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
-                Object value = field.get(obj);
-                sb.append("|" + field.getName() + " \t|" + "| " + value + " |\r\n");
+                Object value = field.get(ob);
+                sb.append("|").append(field.getName()).append(" \t|").append("| ").append(value).append(" |\r\n");
             }
-            log.error("====================================== ObjPrint ======================================");
-            log.error(sb.toString());
-            log.error("====================================== ObjPrint ======================================");
+            logger.error("====================================== ObjPrint ======================================");
+            logger.error(sb.toString());
+            logger.error("====================================== ObjPrint ======================================");
         } catch (Exception e) {
-            log.error("객체 변수 확인 에러", e);
+            logger.error("객체 변수 확인 에러", e);
         }
     }
 
@@ -513,7 +489,7 @@ public class CommonUtils {
                     break;
                 default:
                     if (c > 0x7e) {
-                        sb.append("&#" + ((int) c) + ";");
+                        sb.append("&#").append((int) c).append(";");
                     } else
                         sb.append(c);
             }
@@ -530,11 +506,8 @@ public class CommonUtils {
      * @Method Description :
      * 입력받은 ParameterMap을 함께 입력받은 Dto 객체로 치환한 다음 DTO 객체를 리턴한다.
      */
-    public static <T> T getDTOFromParamMap(Map<String, String[]> parameterMap, Class<T> dto)
-            throws IllegalAccessException, InstantiationException {
-
+    public static <T> T getDTOFromParamMap(Map<String, String[]> parameterMap, Class<T> dto) throws IllegalAccessException, InstantiationException {
         final MutablePropertyValues sourceProps = getPropsFrom(parameterMap);
-
         T targetDTO = dto.newInstance();
         DataBinder binder = new DataBinder(targetDTO);
         binder.bind(sourceProps);
@@ -551,9 +524,7 @@ public class CommonUtils {
      * @Method Description :
      */
     private static MutablePropertyValues getPropsFrom(Map<String, String[]> parameterMap) {
-
         final MutablePropertyValues mpvs = new MutablePropertyValues();
-
         parameterMap.forEach(
                 (k, v) -> {
                     String dotKey =
@@ -648,7 +619,7 @@ public class CommonUtils {
         try {
             date = form.parse(str);
         } catch (ParseException e) {
-            log.error("|------------- ParseException : CommonUtiles.stringDatetimeParse ::: ", e.getMessage());
+            logger.error("|------------- ParseException : CommonUtiles.stringDatetimeParse ::: ", e);
             date = new Date();
         }
         return date;
@@ -669,7 +640,7 @@ public class CommonUtils {
         try {
             date = form.parse(str);
         } catch (ParseException e) {
-            log.error("|------------- ParseException : CommonUtiles.stringDateParse ::: ", e.getMessage());
+            logger.error("|------------- ParseException : CommonUtiles.stringDateParse ::: ", e);
             date = new Date();
         }
         return date;

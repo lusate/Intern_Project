@@ -31,7 +31,7 @@ class CommonExceptionHandler {
     }
 
     //잘못된 요청
-    @ExceptionHandler(value = arrayOf(HttpRequestMethodNotSupportedException::class))
+    @ExceptionHandler(value = [HttpRequestMethodNotSupportedException::class])
     fun handleException(req: HttpServletRequest, rep: HttpServletResponse, session: HttpSession, e: HttpRequestMethodNotSupportedException) {
 		try {
             logger.error("invalid", e)
@@ -41,12 +41,12 @@ class CommonExceptionHandler {
         }
     }
 
-    @ExceptionHandler(value = arrayOf(RequestRejectedException::class))
+    @ExceptionHandler(value = [RequestRejectedException::class])
     fun rejected(e: RequestRejectedException): String {
 		return "redirect:/html/error2.html"
     }
 
-    @ExceptionHandler(value = arrayOf(Exception::class))
+    @ExceptionHandler(value = [Exception::class])
     fun handleException(e: Exception): String {
 		logger.error("error", e)
         return "redirect:/html/error2.html"
