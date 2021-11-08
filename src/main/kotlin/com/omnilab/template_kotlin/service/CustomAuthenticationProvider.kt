@@ -33,13 +33,12 @@ class CustomAuthenticationProvider : AuthenticationProvider {
         if (ip == "0:0:0:0:0:0:0:1")
             ip = "127.0.0.1"
 
-        log.error("id : {} ,  pw : {}", user_id, user_pw)
         sqlSession!!.selectOne<Any>("select1")
-        log.error("id : {} ,  pw : {} as as sa ", user_id, user_pw)
 
         val roles = ArrayList<GrantedAuthority>()
-        val result = UsernamePasswordAuthenticationToken(user_id, user_pw, roles)
+        val result = UsernamePasswordAuthenticationToken(user_id, "", roles)
         return result
+
     }
 
     override fun supports(auth: Class<*>): Boolean {
