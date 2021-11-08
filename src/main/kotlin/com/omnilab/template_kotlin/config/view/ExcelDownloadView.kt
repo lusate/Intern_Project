@@ -60,9 +60,7 @@ class ExcelDownloadView: AbstractView() {
 
         } finally {
             try {
-                if (os != null) {
-                    os.close()
-                }
+                os?.close()
                 worker.close()
             } catch (e: IOException) {
 

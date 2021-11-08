@@ -56,12 +56,8 @@ class DownloadView: AbstractView() {
             out.flush()
             out.close()
         } finally {
-            if (os != null) {
-                os.close()
-            }
-            if(fis != null) {
-                fis.close()
-            }
+            os?.close()
+            fis?.close()
         }
     }
 
