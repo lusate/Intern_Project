@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse
 class LogOutSuccessHandler : LogoutSuccessHandler {
     private val log = LoggerFactory.getLogger(this.javaClass)
 
-    @Throws(IOException::class, ServletException::class)
     override fun onLogoutSuccess(req: HttpServletRequest, rep: HttpServletResponse, authentication: Authentication) {
         if (authentication.details != null) {
             try {

@@ -19,7 +19,6 @@ class LoginSuccessHandler : AuthenticationSuccessHandler {
 
     private val log = LoggerFactory.getLogger(LoginSuccessHandler::class.java)
 
-    @Throws(IOException::class, ServletException::class)
     override fun onAuthenticationSuccess(request: HttpServletRequest, response: HttpServletResponse, auth: Authentication) {
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this)
         val session = request.session

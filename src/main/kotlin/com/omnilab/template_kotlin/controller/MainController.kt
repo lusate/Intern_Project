@@ -44,6 +44,12 @@ class MainController {
         return view
     }
 
+    @RequestMapping(value = ["/check.mi"], method = [RequestMethod.GET, RequestMethod.HEAD])
+    fun check(req: HttpServletRequest): ResponseEntity<String?>? {
+        req.setAttribute("DoNotLog", "")
+        return ResponseEntity(HttpStatus.OK)
+    }
+
     @RequestMapping("/error.mi")
     fun error(req: HttpServletRequest, rep: HttpServletResponse, session: HttpSession): String {
         try{

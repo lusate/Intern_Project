@@ -37,14 +37,12 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
     @Autowired
     private lateinit var customAuthenticationProvider: CustomAuthenticationProvider
 
-    @Throws(Exception::class)
     override fun configure(web: WebSecurity) {
         super.configure(web)
         web.ignoring().antMatchers("/font/**", "/css/**", "/js/**", "/img/**", "/inc/**", "/js/**", "/favicon.ico", "/html/**", "/*.ico")
         web.httpFirewall(allowUrlHttpFirewall())
     }
 
-    @Throws(Exception::class)
     override fun configure(httpSecurity: HttpSecurity) {
         val filter = CharacterEncodingFilter()
         filter.encoding = "UTF-8"
@@ -91,7 +89,6 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
                 .headers().frameOptions().sameOrigin()
     }
 
-    @Throws(Exception::class)
     override fun configure(auth: AuthenticationManagerBuilder) {
         auth.authenticationProvider(customAuthenticationProvider)
     }

@@ -203,7 +203,6 @@ class MvcConfig : WebMvcConfigurer {
 
     //Multipartresolver
     @Bean(name = ["multipartResolver"])
-    @Throws(IOException::class)
     fun multipartResolver(): CommonsMultipartResolver {
         val multipartresolver = CommonsMultipartResolver()
         val uploadDirResource = FileSystemResource(System.getProperty("user.dir") + "/src/main/webapp/temp")

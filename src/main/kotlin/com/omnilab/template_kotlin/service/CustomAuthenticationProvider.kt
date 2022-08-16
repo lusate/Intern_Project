@@ -24,7 +24,6 @@ class CustomAuthenticationProvider : AuthenticationProvider {
     @Autowired
     private val sqlSession: SqlSession? = null
 
-    @Throws(AuthenticationException::class)
     override fun authenticate(auth: Authentication): Authentication {
         val user_id = auth.principal.toString()
         val user_pw = auth.credentials.toString()

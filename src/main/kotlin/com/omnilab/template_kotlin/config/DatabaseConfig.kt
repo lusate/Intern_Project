@@ -141,7 +141,6 @@ internal class DatabaseConfig {
     }
 
     @Bean(name = ["SqlSessionFactory"])
-    @Throws(Exception::class)
     fun SqlSessionFactory(): SqlSessionFactory? {
         val sessionFactoryBean = SqlSessionFactoryBean()
         sessionFactoryBean.setDataSource(dataSource())
@@ -152,7 +151,6 @@ internal class DatabaseConfig {
     }
 
     @Bean(name = ["sqlSession"], destroyMethod = "clearCache")
-    @Throws(Exception::class)
     fun sqlSession(): SqlSession {
         return SqlSessionTemplate(SqlSessionFactory()!!)
     }

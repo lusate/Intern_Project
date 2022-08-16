@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse
 
 class LoginFailHandler : AuthenticationFailureHandler {
 
-    @Throws(IOException::class)
     override fun onAuthenticationFailure(req: HttpServletRequest, rep: HttpServletResponse, auth: AuthenticationException) {
         req.characterEncoding = "UTF-8"
         rep.contentType = "text/html; charset=UTF-8"
