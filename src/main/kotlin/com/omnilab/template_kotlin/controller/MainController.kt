@@ -50,6 +50,22 @@ class MainController {
         return ResponseEntity(HttpStatus.OK)
     }
 
+
+    @GetMapping("/cimgd", "/cimg")
+    fun img(@RequestParam map: MutableMap<String, String>, req: HttpServletRequest): ModelAndView {
+        val str = StringBuilder()
+        str.append(map["p"])
+        for(i in map){
+            if(i.key != "p"){
+                str.append("&${i.key}=${i.value}")
+            }
+        }
+        val view = ModelAndView("img")
+        view.addObject("img", str.toString())
+        return view
+    }
+
+
     @RequestMapping("/error.mi")
     fun error(req: HttpServletRequest, rep: HttpServletResponse, session: HttpSession): String {
         try{

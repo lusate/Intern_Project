@@ -90,12 +90,10 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.NEVER)
             .and()
-                //.headers().frameOptions().sameOrigin()
                 .headers()
                     .xssProtection()
                 .and()
-                    .contentSecurityPolicy("frame-ancestors 'self' http://lucas.milvusapp.com:8081;")
-                //.headers().frameOptions().disable().addHeaderWriter(CustomXFrameOptionsHeaderWriter())
+                    .contentSecurityPolicy("frame-ancestors 'self' *.milvusapp.com tableau-report.com *.tableau-report.com dashboard.lge.com;")
     }
 
     override fun configure(auth: AuthenticationManagerBuilder) {
