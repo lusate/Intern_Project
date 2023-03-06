@@ -32,6 +32,8 @@ class CustomAuthenticationProvider : AuthenticationProvider {
         if (ip == "0:0:0:0:0:0:0:1")
             ip = "127.0.0.1"
 
+        log.error("CustomAuthenticationProvider~!~!~")
+
         sqlSession!!.selectOne<Any>("select1")
 
         val roles = ArrayList<GrantedAuthority>()

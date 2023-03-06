@@ -28,7 +28,7 @@ import java.util.*
 class OtherConfig {
 
     // MAIL 설정
-    @Bean(name = arrayOf("JavaMailSender"))
+    @Bean("JavaMailSender")
     fun javaMailSender(): JavaMailSender {
         val mailSender = JavaMailSenderImpl()
         mailSender.host = ""
@@ -45,19 +45,19 @@ class OtherConfig {
     }
 
     //Task Excuetor 설정
-    @Bean(name = arrayOf("taskExecutor"))
+    @Bean("taskExecutor")
     fun executor(): ThreadPoolTaskExecutor {
         val executor = ThreadPoolTaskExecutor()
         executor.setThreadNamePrefix("template-task-")
         executor.keepAliveSeconds = 3600
         executor.corePoolSize = 2
-        executor.setQueueCapacity(5)
+        executor.queueCapacity = 5
         executor.maxPoolSize = 10
         executor.setAllowCoreThreadTimeOut(false)
         return executor
     }
 
-    @Bean(name = arrayOf("paginationManager"))
+    @Bean("paginationManager")
     fun defaultPaginationManager(): DefaultPaginationManager {
         val manager = DefaultPaginationManager()
         val map = HashMap<String, PaginationRenderer>()
@@ -67,24 +67,23 @@ class OtherConfig {
         return manager
     }
 
-    @Bean(name = ["restTemplate"])
+    @Bean("restTemplate")
     fun restTemplate(): RestTemplate {
         val factorty = HttpComponentsClientHttpRequestFactory()
         factorty.setReadTimeout(5000)
         factorty.setConnectTimeout(3000)
         val httpClient = HttpClientBuilder.create()
-                .setMaxConnTotal(100)
-                .setMaxConnPerRoute(5)
-                .setRedirectStrategy(LaxRedirectStrategy())
-                .build()
+            .setMaxConnTotal(100)
+            .setMaxConnPerRoute(5)
+            .setRedirectStrategy(LaxRedirectStrategy())
+            .build()
         factorty.httpClient = httpClient
 
-        val restTemplateBuilder = RestTemplateBuilder()
-                .requestFactory { factorty }
-                .errorHandler(RestTemplateErrorHandler())
-                .setConnectTimeout(Duration.ofMinutes(3))
-                .build()
-        return restTemplateBuilder
+        return RestTemplateBuilder()
+            .requestFactory { factorty }
+            .errorHandler(RestTemplateErrorHandler())
+            .setConnectTimeout(Duration.ofMinutes(3))
+            .build()
     }
 
 }

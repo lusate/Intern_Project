@@ -4,37 +4,31 @@ import com.omnilab.template_kotlin.config.handler.AuthenticationHandler
 import com.omnilab.template_kotlin.config.handler.LoginFailHandler
 import com.omnilab.template_kotlin.config.handler.LoginSuccessHandler
 import com.omnilab.template_kotlin.service.CustomAuthenticationProvider
-import org.slf4j.LoggerFactory
-
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
-import org.springframework.security.web.firewall.StrictHttpFirewall
-import org.springframework.security.web.firewall.HttpFirewall
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.security.crypto.password.PasswordEncoder
-
-import java.util.EnumSet
-
-import org.springframework.boot.web.servlet.FilterRegistrationBean
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
-import org.springframework.security.web.csrf.CsrfFilter
-import org.springframework.web.filter.CharacterEncodingFilter
-import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.context.annotation.Configuration
+import org.springframework.core.annotation.Order
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
+import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.builders.HttpSecurity.RequestMatcherConfigurer
+import org.springframework.security.config.annotation.web.builders.WebSecurity
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
+import org.springframework.security.config.annotation.web.configurers.*
 import org.springframework.security.config.http.SessionCreationPolicy
-import org.springframework.security.web.header.HeaderWriter
-import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter
-
+import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.csrf.CsrfFilter
+import org.springframework.security.web.firewall.StrictHttpFirewall
+import org.springframework.web.filter.CharacterEncodingFilter
+import java.util.*
 import javax.servlet.DispatcherType
 import javax.servlet.Filter
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
-@EnableWebSecurity
-class SecurityConfig: WebSecurityConfigurerAdapter() {
+
+@Configuration
+class SecurityConfig {
 
     @Autowired
     private lateinit var authenticationhandler: AuthenticationHandler
@@ -42,62 +36,102 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
     @Autowired
     private lateinit var customAuthenticationProvider: CustomAuthenticationProvider
 
-    override fun configure(web: WebSecurity) {
-        super.configure(web)
-        web.ignoring().antMatchers("/font/**", "/css/**", "/js/**", "/img/**", "/inc/**", "/js/**", "/favicon.ico", "/html/**", "/*.ico")
-        web.httpFirewall(allowUrlHttpFirewall())
+    @Bean
+    fun webSecurityCustomizer(): WebSecurityCustomizer {
+        return WebSecurityCustomizer { web: WebSecurity ->
+            val firewall = StrictHttpFirewall()
+            //firewall.setAllowUrlEncodedPercent(true);
+            firewall.setAllowUrlEncodedSlash(true)
+            firewall.setAllowUrlEncodedDoubleSlash(true)
+
+            web.httpFirewall(firewall)
+        }
     }
 
-    override fun configure(httpSecurity: HttpSecurity) {
+    // 리소스
+    @Bean
+    @Order(0)
+    fun resources(http: HttpSecurity): SecurityFilterChain {
+        return http.requestMatchers { matchers: RequestMatcherConfigurer ->
+            matchers.antMatchers("/font/**", "/css/**", "/js/**", "/img/**", "/inc/**", "/js/**", "/favicon.ico", "/html/**", "/*.ico")
+        }
+        .authorizeHttpRequests { authorize: AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry ->
+            authorize.anyRequest().permitAll()
+        }
+        .requestCache { obj: RequestCacheConfigurer<HttpSecurity> -> obj.disable() }
+        .securityContext { obj: SecurityContextConfigurer<HttpSecurity> -> obj.disable() }
+        .sessionManagement { obj: SessionManagementConfigurer<HttpSecurity> -> obj.disable() }
+        .build()
+    }
+
+    // 일반
+    @Bean
+    @Order(1)
+    fun securityFilterChain(httpSecurity: HttpSecurity): SecurityFilterChain {
         val filter = CharacterEncodingFilter()
         filter.encoding = "UTF-8"
         filter.setForceEncoding(true)
-        httpSecurity.addFilterBefore(filter, CsrfFilter::class.java)
-                .csrf().ignoringAntMatchers("/rest/**", "/api/**")
-            .and()
-                .authorizeRequests().antMatchers("/", "/index", "/login", "/loginProcess.service", "/logout.service", "/error", "/cimg/**", "/cimgd/**", "/test/**").permitAll()
-            .and()
-                .authorizeRequests().anyRequest().authenticated()
+
+        return httpSecurity.addFilterBefore(filter, CsrfFilter::class.java)
+            .csrf { csrf: CsrfConfigurer<HttpSecurity> ->
+                csrf.ignoringAntMatchers("/rest/**", "/api/**")
+            }
+            .authorizeRequests { authorize: ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry ->
+                authorize
+                    .antMatchers("/", "/index", "/index.mi", "/loginProcess.service", "/logout.service", "/error.mi", "/cimg/**", "/cimgd/**", "/test/**").permitAll()
+                    //.antMatchers("/user").hasRole("USER")
+                    .anyRequest().authenticated()
+            }
             // 로그인 설정
-            .and()
-                .formLogin()
-                .loginPage("/index")
-                .loginProcessingUrl("/login.service")
-                .usernameParameter("id")
-                .passwordParameter("password")
-                .successHandler(LoginSuccessHandler())
-                .failureHandler(LoginFailHandler())
+            .formLogin { form: FormLoginConfigurer<HttpSecurity> ->
+                form
+                    .loginPage("/index.mi")
+                    .loginProcessingUrl("/loginProcess.service")
+                    .usernameParameter("id")
+                    .passwordParameter("password")
+                    .successHandler(LoginSuccessHandler())
+                    .failureHandler(LoginFailHandler())
+            }
             // 로그아웃 설정
-            .and()
-                .logout()
-                .logoutUrl("/logout.service")
-                .logoutSuccessUrl("/index")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID", "TEMPLATE")
+            .logout { logout: LogoutConfigurer<HttpSecurity> ->
+                logout
+                    .logoutUrl("/logout.service")
+                    .logoutSuccessUrl("/index.mi")
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID", "TEMPLATE")
+            }
             // 해들링 설정
-            .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(authenticationhandler)
-                .accessDeniedHandler(authenticationhandler)
+            .exceptionHandling { exceptionHandling: ExceptionHandlingConfigurer<HttpSecurity> ->
+                exceptionHandling
+                    .authenticationEntryPoint(authenticationhandler)
+                    .accessDeniedHandler(authenticationhandler)
+            }
             // remember me 설정
-            .and()
-                .rememberMe()
-                .key("template")
-                .rememberMeParameter("remember_me")
-                .rememberMeCookieName("TEMPLATE")
-                .tokenValiditySeconds(864000)
-            .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.NEVER)
-            .and()
-                .headers()
-                    .xssProtection()
-                .and()
-                    .contentSecurityPolicy("frame-ancestors 'self' *.milvusapp.com tableau-report.com *.tableau-report.com dashboard.lge.com;")
+            .rememberMe { rememberMe: RememberMeConfigurer<HttpSecurity> ->
+                rememberMe
+                    .key("template")
+                    .rememberMeParameter("remember_me")
+                    .rememberMeCookieName("TEMPLATE")
+                    .tokenValiditySeconds(864000)
+            }
+            // session
+            .sessionManagement { sessionManagement: SessionManagementConfigurer<HttpSecurity> ->
+                sessionManagement
+                    .sessionCreationPolicy(SessionCreationPolicy.NEVER)
+            }
+            // 헤더 설정
+            .headers { headers: HeadersConfigurer<HttpSecurity> ->
+                headers
+                    .xssProtection{ }
+                    .contentSecurityPolicy("frame-ancestors 'self' *.milvusapp.com tableau-report.com *.tableau-report.com;")
+            }
+            .build()
     }
 
-    override fun configure(auth: AuthenticationManagerBuilder) {
-        auth.authenticationProvider(customAuthenticationProvider)
+
+    @Bean
+    fun authenticationManager(authenticationConfiguration: AuthenticationConfiguration): AuthenticationManager? {
+        return authenticationConfiguration.authenticationManager
     }
 
     @Bean
@@ -108,34 +142,6 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
         return registration
     }
 
-    @Bean
-    fun passwordEncoder(): PasswordEncoder {
-        return BCryptPasswordEncoder()
-    }
 
-    @Bean
-    fun allowUrlHttpFirewall(): HttpFirewall {
-        val firewall = StrictHttpFirewall()
-        //firewall.setAllowUrlEncodedPercent(true);
-        firewall.setAllowUrlEncodedSlash(true)
-        firewall.setAllowUrlEncodedDoubleSlash(true)
-        return firewall
-    }
-
-    private class CustomXFrameOptionsHeaderWriter : HeaderWriter {
-        private val defaultHeaderWriter: XFrameOptionsHeaderWriter = XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)
-        private val allowUrl: String = "\\/sf\\/.*"
-        private val log = LoggerFactory.getLogger(this.javaClass)
-
-        override fun writeHeaders(req: HttpServletRequest, rep: HttpServletResponse) {
-            log.error("Referer : {}", req.getHeader("Referer"))
-            log.error("HOST : {}", req.getHeader("HOST"))
-            log.error("X-FORWARDED-HOST : {}", req.getHeader("X-FORWARDED-HOST"))
-
-            if (!req.requestURI.contains(allowUrl)) {
-                defaultHeaderWriter.writeHeaders(req, rep)
-            }
-        }
-    }
 
 }
