@@ -6,6 +6,8 @@
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="tld/Commonutils.tld" prefix="cutil"%>
+<c:set var="urlPath" value="${requestScope['javax.servlet.forward.request_uri']}" scope="request" />
 <c:set var="req" value="${pageContext.request}" />
 <c:choose>
 	<c:when test="${empty header['X-Forwarded-Proto']}">

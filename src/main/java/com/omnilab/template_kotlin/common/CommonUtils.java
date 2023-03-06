@@ -662,10 +662,24 @@ public class CommonUtils {
         }
     }
 
-
     public static synchronized String encodeURI(String s) {
         String[] findList = {"#", "+", "&", "%"};
         String[] replList = {"%23", "%2B", "%26", "%25"};
         return StringUtils.replaceEach(s, findList, replList);
+    }
+
+    public static String checkPort(Object po){
+        String p = String.valueOf(po);
+        try{
+            int port = Integer.parseInt(p);
+            if( port == 80 || port == 443){
+                return "";
+            }else {
+                return ":" + port;
+            }
+        }catch (Exception e){
+            logger.error("checkPort", e);
+            return "";
+        }
     }
 }
