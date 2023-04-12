@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<groupId>com.omnilab</groupId>
-	<artifactId>template_kotlin</artifactId>
+	<artifactId>templateKotlin</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	
-	<name>template_kotlin</name>
+	<name>templateKotlin</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
@@ -16,6 +16,7 @@
 		<kotlin.version>1.8.10</kotlin.version>
 		<spring.version>2.7.10</spring.version>
 		<tomcat.version>9.0.31</tomcat.version>
+		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 
 	<parent>
@@ -330,7 +331,27 @@
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.2</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
+
 		<resources>
 			<resource>
 				<directory>${project.basedir}/src/main/resources</directory>
@@ -364,5 +385,4 @@
 			</properties>
 		</profile>
 	</profiles>
-
 </project>

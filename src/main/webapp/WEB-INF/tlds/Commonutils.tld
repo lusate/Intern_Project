@@ -11,7 +11,7 @@
     <function>
         <description>Port check</description>
         <name>checkPort</name>
-        <function-class>com.omnilab.template_kotlin.common.CommonUtils</function-class>
+        <function-class>com.omnilab.templateKotlin.common.CommonUtils</function-class>
         <function-signature>java.lang.String checkPort(java.lang.Object)</function-signature>
         <example>${cutil:checkPort(int)}</example>
     </function>
