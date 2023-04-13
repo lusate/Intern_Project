@@ -184,8 +184,6 @@
 			<groupId>egovframework</groupId>
 			<artifactId>egovframework.rte.ptl.mvc</artifactId>
 			<version>3.5.0</version>
-			<scope>system</scope> 
-   			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/egovframework.rte.ptl.mvc-3.5.0.jar</systemPath> 
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client -->
 		<dependency>
@@ -367,4 +365,18 @@
 			</properties>
 		</profile>
 	</profiles>
+
+	<repositories>
+		<repository>
+			<id>omnilab-repo-snapshot</id>
+			<name>snapshot</name>
+			<url>https://repo.milvusapp.com:8001/repository/Omnilab-repo-snapshot/</url>
+		</repository>
+		<repository>
+			<id>omnilab-repo-release</id>
+			<name>release</name>
+			<url>https://repo.milvusapp.com:8001/repository/Omnilab-repo-release/</url>
+		</repository>
+	</repositories>
+
 </project>
