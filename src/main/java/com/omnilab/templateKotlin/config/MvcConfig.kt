@@ -42,8 +42,8 @@ import kotlin.collections.ArrayList
 class MvcConfig : WebMvcConfigurer {
 
     override fun configureDefaultServletHandling(configurer: DefaultServletHandlerConfigurer) {
-        //configurer.enable()
-        //super.configureDefaultServletHandling(configurer)
+        // configurer.enable()
+        // super.configureDefaultServletHandling(configurer)
     }
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
@@ -58,7 +58,7 @@ class MvcConfig : WebMvcConfigurer {
     }
 
     override fun addViewControllers(registry: ViewControllerRegistry) {
-        registry.addViewController("/").setViewName("forward:/index")
+        registry.addViewController("/").setViewName("index")
     }
 
     override fun addInterceptors(registry: InterceptorRegistry) {
@@ -79,7 +79,7 @@ class MvcConfig : WebMvcConfigurer {
         return filterRegistrationBean
     }
 
-    @Bean //필터 등록
+    @Bean // 필터 등록
     fun deviceFilter(): FilterRegistrationBean<DeviceResolverRequestFilter> {
         val filterRegistrationBean = FilterRegistrationBean<DeviceResolverRequestFilter>()
         filterRegistrationBean.filter = DeviceResolverRequestFilter()
@@ -97,7 +97,7 @@ class MvcConfig : WebMvcConfigurer {
     }
     */
 
-    @Bean //DispatcherServlet
+    @Bean // DispatcherServlet
     fun dispatcherServlet(): DispatcherServlet {
         val ds = DispatcherServlet()
         ds.setThrowExceptionIfNoHandlerFound(true)
@@ -112,14 +112,14 @@ class MvcConfig : WebMvcConfigurer {
         return viewResolver
     }
 
-    @Bean //BeanNameViewResolver
+    @Bean // BeanNameViewResolver
     fun beanNameViewResolver(): BeanNameViewResolver {
         val viewResolver = BeanNameViewResolver()
         viewResolver.order = 2
         return viewResolver
     }
 
-    @Bean //뷰 리졸버
+    @Bean // 뷰 리졸버
     fun getInternalResourceViewResolver(): InternalResourceViewResolver {
         val viewResolver = InternalResourceViewResolver()
         viewResolver.setViewClass(org.springframework.web.servlet.view.JstlView::class.java)
@@ -137,7 +137,7 @@ class MvcConfig : WebMvcConfigurer {
     }
 
     @Bean
-    fun localeChangeInterceptor() : LocaleChangeInterceptor {
+    fun localeChangeInterceptor(): LocaleChangeInterceptor {
         val re = LocaleChangeInterceptor()
         re.paramName = "ln"
         return re
@@ -153,7 +153,7 @@ class MvcConfig : WebMvcConfigurer {
         return re
     }
 
-    @Bean //json
+    @Bean // json
     fun JacksonConverter(): MappingJackson2HttpMessageConverter {
         val converter = MappingJackson2HttpMessageConverter()
         val mediatype = ArrayList<MediaType>()
@@ -162,7 +162,7 @@ class MvcConfig : WebMvcConfigurer {
         return converter
     }
 
-    @Bean //CharacterEncodingFilter
+    @Bean // CharacterEncodingFilter
     fun characterEncodingFilter(): CharacterEncodingFilter {
         val characterEncodingFilter = CharacterEncodingFilter()
         characterEncodingFilter.encoding = "UTF-8"
@@ -170,7 +170,7 @@ class MvcConfig : WebMvcConfigurer {
         return characterEncodingFilter
     }
 
-    @Bean //String
+    @Bean // String
     fun StringConverter(): StringHttpMessageConverter {
         val converter = StringHttpMessageConverter(Charset.forName("UTF-8"))
         val mediatype = ArrayList<MediaType>()
@@ -200,7 +200,7 @@ class MvcConfig : WebMvcConfigurer {
         return configurer
     }
 
-    //Multipartresolver
+    // Multipartresolver
     @Bean(name = ["multipartResolver"])
     fun multipartResolver(): CommonsMultipartResolver {
         val multipartresolver = CommonsMultipartResolver()
@@ -232,5 +232,4 @@ class MvcConfig : WebMvcConfigurer {
         viewResolver.setPrettyPrint(true)
         return viewResolver
     }
-
 }
