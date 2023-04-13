@@ -1,9 +1,7 @@
 package com.omnilab.templateKotlin.common;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
+import javax.crypto.*;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -19,39 +17,50 @@ import org.slf4j.LoggerFactory;
 
 public class AES256 {
 
-	private static Logger logger = LoggerFactory.getLogger("AES256");
-	public static String AES_Encode(String str, String key)	{
-		try{
-			SecureRandom random = new SecureRandom();
-			byte[] bytesIV = new byte[16];
-			random.nextBytes(bytesIV);
-			IvParameterSpec iv = new IvParameterSpec(bytesIV);
+	private static final Logger logger = LoggerFactory.getLogger("AES256");
+	private static final String KEY = "iKItNTxTSkxgKTteyHyqcPjXqaYHTEm5";
+	//private static final IvParameterSpec iv;
+	private static final GCMParameterSpec iv;
 
-			byte[] textBytes = str.getBytes(StandardCharsets.UTF_8);
-			SecretKeySpec newKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");
-			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-			cipher.init(Cipher.ENCRYPT_MODE, newKey, iv);
-			return Base64.encodeBase64URLSafeString(cipher.doFinal(textBytes));
-		}catch (NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException | InvalidKeyException | InvalidAlgorithmParameterException e) {
-			logger.error("AES_ENCODE", e);
-			return null;
-		}
+	static {
+		/* 단독 사용시
+		 * SecureRandom random = new SecureRandom();
+		 * byte[] bytesIV = new byte[16];
+		 * random.nextBytes(bytesIV);
+		 * iv = new IvParameterSpec(bytesIV);
+		*/
+		/* 타 시스템과 공유시 동일 key/iv 값 필요
+		 * iv = new IvParameterSpec("7779328267167869".getBytes(StandardCharsets.UTF_8));
+		*/
+		iv = new GCMParameterSpec(128, "7779328267167869".getBytes(StandardCharsets.UTF_8));
+
 	}
 
-	public static String AES_Decode(String str, String key)	{
-		try {
-			SecureRandom random = new SecureRandom();
-			byte[] bytesIV = new byte[16];
-			random.nextBytes(bytesIV);
-			IvParameterSpec iv = new IvParameterSpec(bytesIV);
+	public static String enCode(String str)	{
+		try{
+			byte[] keyData = KEY.getBytes();
+			SecretKey secureKey = new SecretKeySpec(keyData, "AES");
+			Cipher c = Cipher.getInstance("AES/GCM/NoPadding");
+			c.init(Cipher.ENCRYPT_MODE, secureKey, iv);
+			byte[] encrypted = c.doFinal(str.getBytes(StandardCharsets.UTF_8));
+			return Base64.encodeBase64URLSafeString(encrypted);
+		}catch (Exception e){
+			logger.error("AES256 enCode Error", e);
+			return null;
+		}
 
-			byte[] textBytes = Base64.decodeBase64(str);
-			SecretKeySpec newKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");
-			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-			cipher.init(Cipher.DECRYPT_MODE, newKey, iv);
-			return new String(cipher.doFinal(textBytes), StandardCharsets.UTF_8);
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException | InvalidKeyException | InvalidAlgorithmParameterException e) {
-			logger.error("AES_DECODE", e);
+	}
+
+	public static String deCode(String str)	{
+		try{
+			byte[] keyData = KEY.getBytes();
+			SecretKey secureKey = new SecretKeySpec(keyData, "AES");
+			Cipher c = Cipher.getInstance("AES/GCM/NoPadding");
+			c.init(Cipher.DECRYPT_MODE, secureKey, iv);
+			byte[] byteStr = Base64.decodeBase64(str.getBytes());
+			return new String(c.doFinal(byteStr), StandardCharsets.UTF_8);
+		}catch (Exception e){
+			logger.error("AES256 deCode Error", e);
 			return null;
 		}
 	}

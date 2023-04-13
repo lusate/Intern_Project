@@ -10,6 +10,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+    <title>::</title>
     <style>
         html,
         body {
