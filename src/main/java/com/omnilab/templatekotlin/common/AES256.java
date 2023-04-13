@@ -17,22 +17,24 @@ public class AES256 {
 	private static final String KEY = "iKItNTxTSkxgKTteyHyqcPjXqaYHTEm5";
 	private static final GCMParameterSpec IV;
 
+	private AES256() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/* 단독 사용시
+	 * SecureRandom random = new SecureRandom();
+	 * byte[] bytesIV = new byte[16];
+	 * random.nextBytes(bytesIV);
+	 * iv = new GCMParameterSpec(128, bytesIV);
+	 */
+	/* 타 시스템과 공유시 동일 key/iv 값 필요
+	 * iv = new GCMParameterSpec(128, "7779328267167869".getBytes(StandardCharsets.UTF_8));
+	 */
 	static {
-		/* 단독 사용시
-		 * SecureRandom random = new SecureRandom();
-		 * byte[] bytesIV = new byte[16];
-		 * random.nextBytes(bytesIV);
-		 * iv = new GCMParameterSpec(128, bytesIV);
-		*/
-		/* 타 시스템과 공유시 동일 key/iv 값 필요
-		 * iv = new GCMParameterSpec(128, "7779328267167869".getBytes(StandardCharsets.UTF_8));
-		*/
 		SecureRandom random = new SecureRandom();
 		byte[] bytesIV = new byte[16];
 		random.nextBytes(bytesIV);
 		IV = new GCMParameterSpec(128, bytesIV);
-
-
 	}
 
 	public static String enCode(String str)	{

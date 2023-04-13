@@ -20,7 +20,7 @@ class AuthenticationHandler: AuthenticationEntryPoint, AccessDeniedHandler {
     val logger = LoggerFactory.getLogger(this::class.java)
 
     override fun commence(req: HttpServletRequest, rep: HttpServletResponse, authException: AuthenticationException) {
-        logger.error("commence {}, {} | {}", CommonUtils.clientip(req), req.requestURI, authException.message)
+        logger.error("commence {}, {} | {}", CommonUtils.clientIp(req), req.requestURI, authException.message)
 		req.characterEncoding = "UTF-8"
         rep.contentType = "text/html; charset=UTF-8"
         val out = rep.writer

@@ -38,6 +38,10 @@ public class CommonUtils {
 
     public static final Logger logger = LoggerFactory.getLogger(CommonUtils.class);
 
+    private CommonUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * @param : HttpServletRequest
      * @return : String ip
@@ -45,38 +49,39 @@ public class CommonUtils {
      * @author : OMNILAB
      * @Method Description : 클라이언트 아이피 체크
      */
-    public static String clientip(HttpServletRequest req) {
+    public static String clientIp(HttpServletRequest req) {
+        String unKnown = "unknown";
         String ip = req.getHeader("X-Forwarded-For");
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || unKnown.equalsIgnoreCase(ip)) {
             ip = req.getHeader("Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || unKnown.equalsIgnoreCase(ip)) {
             ip = req.getHeader("WL-Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || unKnown.equalsIgnoreCase(ip)) {
             ip = req.getHeader("HTTP_CLIENT_IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || unKnown.equalsIgnoreCase(ip)) {
             ip = req.getHeader("HTTP_X_FORWARDED_FOR");
         }
-
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || unKnown.equalsIgnoreCase(ip)) {
             ip = req.getHeader("X-CLIENT-IP");
         }
-
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || unKnown.equalsIgnoreCase(ip)) {
             ip = req.getRemoteAddr();
         }
         return ip;
     }
 
     public static String getScheme(HttpServletRequest req) {
+        String https = "https";
+        String http = "http";
         String scheme;
         String proto = req.getHeader("x-forwarded-proto");
         if (proto != null) {
-            scheme = "https".equals(proto) ? "https" : "http";
+            scheme = https.equals(proto) ? https : http;
         } else {
-            scheme = req.isSecure() ? "https" : "http";
+            scheme = req.isSecure() ? https : http;
         }
         return scheme;
     }
@@ -195,10 +200,7 @@ public class CommonUtils {
      * 입력받은 문자열이 0 또는 1인지 체크하여 true 및 false를 리턴한다.
      */
     public static boolean isBit(String s) {
-        if (!s.equals("0") && !s.equals("1")) {
-            return false;
-        }
-        return true;
+        return s.equals("0") || s.equals("1");
     }
 
     /**
@@ -216,10 +218,10 @@ public class CommonUtils {
         int etc = 0;
 
         char[] string = str.toCharArray();
-        for (int j = 0; j < string.length; j++) {
-            if (string[j] >= 'A' && string[j] <= 'z') {
+        for (char c : string) {
+            if (c >= 'A' && c <= 'z') {
                 en++;
-            } else if (string[j] >= '\u3131' && string[j] <= '\uD787') {
+            } else if (c >= '\u3131' && c <= '\uD787') {
                 ko += 2;
             } else {
                 etc++;
@@ -241,9 +243,7 @@ public class CommonUtils {
     public static boolean stringBetween(String value, int start, int end) {
         try {
             int i = Integer.parseInt(value);
-            if (i >= start && i <= end) {
-                return true;
-            } else return false;
+            return i >= start && i <= end;
         } catch (Exception e) {
             return false;
         }
@@ -291,11 +291,7 @@ public class CommonUtils {
         try {
             Date dt1 = dateFormatParser.parse(startDate);
             Date dt2 = dateFormatParser.parse(endDate);
-            if (dt2.after(dt1)) {
-                return true;
-            } else {
-                return false;
-            }
+            return dt2.after(dt1);
         } catch (Exception e) {
             return false;
         }

@@ -27,7 +27,7 @@ class CustomAuthenticationProvider : AuthenticationProvider {
         val user_id = auth.principal.toString()
         val user_pw = auth.credentials.toString()
 
-        var ip = CommonUtils.clientip(request)
+        var ip = CommonUtils.clientIp(request)
         if (ip == "0:0:0:0:0:0:0:1")
             ip = "127.0.0.1"
 

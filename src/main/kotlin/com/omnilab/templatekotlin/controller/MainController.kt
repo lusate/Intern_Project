@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession
 class MainController {
 
 	val logger = LoggerFactory.getLogger(this::class.java)
-	
+
     @Autowired
     @Qualifier("TEMPLATEServiceImpl")
     private lateinit var service: TEMPLATEService
@@ -38,7 +38,6 @@ class MainController {
         return ResponseEntity(HttpStatus.OK)
     }
 
-
     @GetMapping("/cimgd", "/cimg")
     fun img(@RequestParam map: MutableMap<String, String>, req: HttpServletRequest): ModelAndView {
         val str = StringBuilder()
@@ -52,7 +51,6 @@ class MainController {
         view.addObject("img", str.toString())
         return view
     }
-
 
     @RequestMapping("/error.mi")
     fun error(req: HttpServletRequest, rep: HttpServletResponse, session: HttpSession): String {

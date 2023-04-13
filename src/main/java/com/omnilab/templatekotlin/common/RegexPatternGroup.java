@@ -1,12 +1,20 @@
 package com.omnilab.templatekotlin.common;
 
 public class RegexPatternGroup {
-	
-	private static String RegExClass = "( )(class)( )?=( )?(\"|')[^<]+(\"|')";
-    private static String RegExStyle = "<(style)([^<]+)(</style>| +/>)";
-    private static String RegExScript = "<(script)([^<]+)(</script>| +/>)";
-    private static String RegExOnAttr = "( )(on)[a-z]+( )?=( )?(\"|')[^/>]+(\"|')";
-	
+
+	private static final String regExClass;
+	private static final String regExStyle;
+	private static final String regExScript;
+	private static final String regExOnAttr;
+
+	static {
+		regExClass = "( )(class)( )?=( )?(\"|')[^<]+(\"|')";
+		regExStyle = "<(style)([^<]+)(</style>| +/>)";
+		regExScript = "<(script)([^<]+)(</script>| +/>)";
+		regExOnAttr = "( )(on)[a-z]+( )?=( )?(\"|')[^/>]+(\"|')";
+	}
+
+
 	/**
 	 * @return the dateRegex
 	 * @Method Description : 
@@ -196,8 +204,8 @@ apa	public static String getIntAndNewRegex() {
 	 * @description 입력 받은 문자열에서 스크립트와, 콜론, On 속성을 제거한 후 반환한다 
 	 */
 	public static String removeBlackList(String string){
-		String response = string.replaceAll(RegExScript, "")
-								.replaceAll(RegExOnAttr, "")
+		String response = string.replaceAll(regExScript, "")
+								.replaceAll(regExOnAttr, "")
 								.replaceAll(";", "");
 		return response;
 	}
@@ -208,10 +216,10 @@ apa	public static String getIntAndNewRegex() {
 	 * @description 입력 받은 문자열에서 스크립트태그와 스타일 태그, 클래스와, ON 속성을 제거한 후 반환합니다. 
 	 */
 	public static String removeHTMLTag(String string){
-		String response = string.replaceAll(RegExScript, "")
-								.replaceAll(RegExOnAttr, "")
-								.replaceAll(RegExStyle, "")
-								.replaceAll(RegExClass, "");
+		String response = string.replaceAll(regExScript, "")
+								.replaceAll(regExOnAttr, "")
+								.replaceAll(regExStyle, "")
+								.replaceAll(regExClass, "");
 		return response;
 	}
 	
@@ -221,8 +229,8 @@ apa	public static String getIntAndNewRegex() {
 	 * @description 입력 받은 문자열에서 스크립트(on 속성 포함)를 제거한 후 반환한다 
 	 */
 	public static String removeScriptRemove(String string){
-		String response = string.replaceAll(RegExScript, "")
-								.replaceAll(RegExOnAttr, "");
+		String response = string.replaceAll(regExScript, "")
+								.replaceAll(regExOnAttr, "");
 		return response;
 	}
 }

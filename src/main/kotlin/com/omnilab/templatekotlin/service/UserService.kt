@@ -29,7 +29,7 @@ class UserService : UserDetailsService{
 
     override fun loadUserByUsername(username: String): UserDetails {
         log.error("loadUserByUsername~!~!~")
-        var ip = CommonUtils.clientip(request)
+        var ip = CommonUtils.clientIp(request)
         if (ip == "0:0:0:0:0:0:0:1")
             ip = "127.0.0.1"
 
