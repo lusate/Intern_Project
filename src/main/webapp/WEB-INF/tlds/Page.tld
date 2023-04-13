@@ -10,7 +10,7 @@
 
     <tag>
         <name>pagination</name>
-        <tag-class>com.omnilab.templateKotlin.common.PaginationTagCustom</tag-class>
+        <tag-class>com.omnilab.templatekotlin.common.PaginationTagCustom</tag-class>
 
         <body-content>empty</body-content>
         <description>Pagination Tag</description>
