@@ -6,13 +6,11 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.security.SecureRandom
 
-class JasyptEnc {
-
-}
+class JasyptEnc
 
 private val log: Logger = LoggerFactory.getLogger("JasyptEnc")
 
-fun main(args: Array<String>) {
+fun main() {
     val enc = PooledPBEStringEncryptor()
     val config = SimpleStringPBEConfig()
     config.password = "milvussteve"
@@ -29,8 +27,4 @@ fun main(args: Array<String>) {
     log.error(enc.decrypt("bIvGp1nwv93dDalDAoX3XCMGOh/E0zrjwbggFBq62zCmq/2apMU7TcPzK4UisYVE"))
     log.error("=========================")
     */
-    val random = SecureRandom() // Compliant
-    val bytes = ByteArray(10)
-    random.nextBytes(bytes)
-    log.error(String(bytes, Charsets.UTF_8))
 }

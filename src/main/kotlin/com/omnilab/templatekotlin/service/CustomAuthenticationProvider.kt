@@ -24,25 +24,23 @@ class CustomAuthenticationProvider : AuthenticationProvider {
     private val sqlSession: SqlSession? = null
 
     override fun authenticate(auth: Authentication): Authentication {
-        val user_id = auth.principal.toString()
-        val user_pw = auth.credentials.toString()
+        val userId = auth.principal.toString()
+        val userPw = auth.credentials.toString()
 
         var ip = CommonUtils.clientIp(request)
-        if (ip == "0:0:0:0:0:0:0:1")
+        if (ip == "0:0:0:0:0:0:0:1") {
             ip = "127.0.0.1"
-
+        }
         log.error("CustomAuthenticationProvider~!~!~")
 
         sqlSession!!.selectOne<Any>("select1")
 
         val roles = ArrayList<GrantedAuthority>()
-        val result = UsernamePasswordAuthenticationToken(user_id, "", roles)
+        val result = UsernamePasswordAuthenticationToken(userId, "", roles)
         return result
-
     }
 
     override fun supports(auth: Class<*>): Boolean {
         return auth == UsernamePasswordAuthenticationToken::class.java
     }
-
 }

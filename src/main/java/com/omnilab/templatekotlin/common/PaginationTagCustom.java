@@ -15,13 +15,11 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 public class PaginationTagCustom extends TagSupport {
 	
 	private static final long serialVersionUID = 1L;
-    private PaginationInfo paginationInfo;
-    private String type;
-    private String jsFunction;
+    private PaginationInfo paginationInfo = null;
+    private String type = null;
+    private String jsFunction = null;
 
-    public PaginationTagCustom() {
-    }
-
+    @Override
     public int doEndTag() throws JspException {
         try {
             JspWriter out = this.pageContext.getOut();

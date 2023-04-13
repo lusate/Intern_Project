@@ -26,7 +26,7 @@ class AuthenticationHandler: AuthenticationEntryPoint, AccessDeniedHandler {
         val out = rep.writer
         out.print("<script>")
         out.print("alert('로그인된 사용자만 이용할 수 있습니다.');")
-        out.print("location.href='/" + GlobalValues.indexpage + "';")
+        out.print("location.href='/" + GlobalValues.indexPage + "';")
         out.print("</script>")
         out.flush()
         out.close()
@@ -39,7 +39,7 @@ class AuthenticationHandler: AuthenticationEntryPoint, AccessDeniedHandler {
         val out = rep.writer
         when {
             req.requestURI == "/" -> {
-                rep.sendRedirect("/${GlobalValues.indexpage}")
+                rep.sendRedirect("/${GlobalValues.indexPage}")
             }
             req.requestURI.contains(".ajax") -> {
                 rep.sendError(HttpServletResponse.SC_UNAUTHORIZED)

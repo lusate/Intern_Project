@@ -19,7 +19,6 @@ class LoginSuccessHandler : AuthenticationSuccessHandler {
 
     override fun onAuthenticationSuccess(request: HttpServletRequest, response: HttpServletResponse, auth: Authentication) {
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this)
-        val session = request.session
         val authentication = SecurityContextHolder.getContext().authentication
         val authorites: Iterator<GrantedAuthority> = authentication.authorities.iterator()
         var gName: String? = null

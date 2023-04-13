@@ -10,7 +10,9 @@ import java.security.SecureRandom;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AES256 {
 
 	private static final Logger logger = LoggerFactory.getLogger("AES256");
