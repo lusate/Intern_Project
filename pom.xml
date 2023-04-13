@@ -16,6 +16,7 @@
 		<kotlin.version>1.8.10</kotlin.version>
 		<spring.version>2.7.10</spring.version>
 		<tomcat.version>9.0.31</tomcat.version>
+		<sonar.language>java</sonar.language>
 		<sonar.sources>src/main,pom.xml</sonar.sources>
 	</properties>
 
