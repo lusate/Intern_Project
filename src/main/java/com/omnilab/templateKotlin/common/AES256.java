@@ -19,7 +19,7 @@ public class AES256 {
 
 	private static final Logger logger = LoggerFactory.getLogger("AES256");
 	private static final String KEY = "iKItNTxTSkxgKTteyHyqcPjXqaYHTEm5";
-	private static final GCMParameterSpec iv;
+	private static final GCMParameterSpec IV;
 
 	static {
 		/* 단독 사용시
@@ -34,7 +34,9 @@ public class AES256 {
 		SecureRandom random = new SecureRandom();
 		byte[] bytesIV = new byte[16];
 		random.nextBytes(bytesIV);
-		iv = new GCMParameterSpec(128, bytesIV);
+		IV = new GCMParameterSpec(128, bytesIV);
+
+
 	}
 
 	public static String enCode(String str)	{
@@ -42,7 +44,7 @@ public class AES256 {
 			byte[] keyData = KEY.getBytes();
 			SecretKey secureKey = new SecretKeySpec(keyData, "AES");
 			Cipher c = Cipher.getInstance("AES/GCM/NoPadding");
-			c.init(Cipher.ENCRYPT_MODE, secureKey, iv);
+			c.init(Cipher.ENCRYPT_MODE, secureKey, IV);
 			byte[] encrypted = c.doFinal(str.getBytes(StandardCharsets.UTF_8));
 			return Base64.encodeBase64URLSafeString(encrypted);
 		}catch (Exception e){
@@ -57,7 +59,7 @@ public class AES256 {
 			byte[] keyData = KEY.getBytes();
 			SecretKey secureKey = new SecretKeySpec(keyData, "AES");
 			Cipher c = Cipher.getInstance("AES/GCM/NoPadding");
-			c.init(Cipher.DECRYPT_MODE, secureKey, iv);
+			c.init(Cipher.DECRYPT_MODE, secureKey, IV);
 			byte[] byteStr = Base64.decodeBase64(str.getBytes());
 			return new String(c.doFinal(byteStr), StandardCharsets.UTF_8);
 		}catch (Exception e){
