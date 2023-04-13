@@ -1,4 +1,4 @@
-package com.mablic.template_kotlin
+package com.omnilab.templateKotlin
 
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig

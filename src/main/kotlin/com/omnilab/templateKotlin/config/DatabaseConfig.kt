@@ -144,7 +144,7 @@ internal class DatabaseConfig {
     fun SqlSessionFactory(): SqlSessionFactory? {
         val sessionFactoryBean = SqlSessionFactoryBean()
         sessionFactoryBean.setDataSource(dataSource())
-        sessionFactoryBean.setTypeAliasesPackage("com.omnilab.template_kotlin.model")
+        sessionFactoryBean.setTypeAliasesPackage("com.omnilab.templateKotlin.model")
         sessionFactoryBean.setConfigLocation(applicationContext.getResource("classpath:mybatis/mybatis-config.xml"))
         sessionFactoryBean.setMapperLocations(*applicationContext.getResources("classpath:mybatis/mapper/*.xml"))
         return sessionFactoryBean.getObject()

@@ -10,11 +10,12 @@ class TestController {
     val logger = LoggerFactory.getLogger(this::class.java)
 
     @GetMapping("/test")
-    fun test(@RequestParam n: Int): String? {
+    fun test(@RequestParam n: Int): String {
         return if (n >= 0) {
             "hello"
         } else {
             "world"
         }
     }
+
 }

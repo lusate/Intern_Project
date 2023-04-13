@@ -1,3 +1,3 @@
-# template_kotlin
+# templateKotlin
 
-template_kotlin
+templateKotlin
