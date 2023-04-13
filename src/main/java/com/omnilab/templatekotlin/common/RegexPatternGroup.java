@@ -14,6 +14,9 @@ public class RegexPatternGroup {
 		regExOnAttr = "( )(on)[a-z]+( )?=( )?(\"|')[^/>]+(\"|')";
 	}
 
+	private RegexPatternGroup() {
+		throw new IllegalStateException("Utility class");
+	}
 
 	/**
 	 * @return the dateRegex

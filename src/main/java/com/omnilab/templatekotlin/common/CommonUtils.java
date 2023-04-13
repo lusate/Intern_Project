@@ -498,13 +498,17 @@ public class CommonUtils {
      * @Method Description :
      * 입력받은 ParameterMap을 함께 입력받은 Dto 객체로 치환한 다음 DTO 객체를 리턴한다.
      */
-    public static <T> T getDTOFromParamMap(Map<String, String[]> parameterMap, Class<T> dto) throws IllegalAccessException, InstantiationException {
-        final MutablePropertyValues sourceProps = getPropsFrom(parameterMap);
-        T targetDTO = dto.newInstance();
-        DataBinder binder = new DataBinder(targetDTO);
-        binder.bind(sourceProps);
-
-        return targetDTO;
+    public static <T> T getDTOFromParamMap(Map<String, String[]> parameterMap, Class<T> dto) {
+        try{
+            final MutablePropertyValues sourceProps = getPropsFrom(parameterMap);
+            T targetDTO = dto.getDeclaredConstructor().newInstance();
+            DataBinder binder = new DataBinder(targetDTO);
+            binder.bind(sourceProps);
+            return targetDTO;
+        } catch (Exception e){
+            logger.error("getDTOFromParamMap(", e);
+            return null;
+        }
     }
 
     /**
