@@ -14,7 +14,7 @@
 	<div id="mainFrm" class="login_form">
 		<form:form action="/loginProcess.service" method="post" name="form">
 			<div class="login" id="login">
-				<img src="/img/Milvus_CI.png"/>
+				<img src="/img/Milvus_CI.png" alt="Milvus_CI"/>
 				<div class="form_div">
 					<input class="login_input id" type="text" name="id" maxlength="30"  placeholder="ID" />
 				</div>

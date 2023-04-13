@@ -27,7 +27,7 @@ public class PaginationTagCustom extends TagSupport {
             JspWriter out = this.pageContext.getOut();
             WebApplicationContext ctx = RequestContextUtils.findWebApplicationContext((HttpServletRequest) this.pageContext.getRequest(), this.pageContext.getServletContext());
             Object paginationManager;
-            if (ctx.containsBean("paginationManager")) {
+            if (ctx != null && ctx.containsBean("paginationManager")) {
                 paginationManager = ctx.getBean("paginationManager");
             } else {
                 paginationManager = new DefaultPaginationManager();
