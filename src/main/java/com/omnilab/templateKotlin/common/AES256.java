@@ -19,7 +19,6 @@ public class AES256 {
 
 	private static final Logger logger = LoggerFactory.getLogger("AES256");
 	private static final String KEY = "iKItNTxTSkxgKTteyHyqcPjXqaYHTEm5";
-	//private static final IvParameterSpec iv;
 	private static final GCMParameterSpec iv;
 
 	static {
@@ -27,13 +26,15 @@ public class AES256 {
 		 * SecureRandom random = new SecureRandom();
 		 * byte[] bytesIV = new byte[16];
 		 * random.nextBytes(bytesIV);
-		 * iv = new IvParameterSpec(bytesIV);
+		 * iv = new GCMParameterSpec(128, bytesIV);
 		*/
 		/* 타 시스템과 공유시 동일 key/iv 값 필요
-		 * iv = new IvParameterSpec("7779328267167869".getBytes(StandardCharsets.UTF_8));
+		 * iv = new GCMParameterSpec(128, "7779328267167869".getBytes(StandardCharsets.UTF_8));
 		*/
-		iv = new GCMParameterSpec(128, "7779328267167869".getBytes(StandardCharsets.UTF_8));
-
+		SecureRandom random = new SecureRandom();
+		byte[] bytesIV = new byte[16];
+		random.nextBytes(bytesIV);
+		iv = new GCMParameterSpec(128, bytesIV);
 	}
 
 	public static String enCode(String str)	{

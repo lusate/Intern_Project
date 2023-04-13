@@ -9,9 +9,10 @@ public class test {
 	private static final Logger logger = LoggerFactory.getLogger("test");
 
 	public static void main(String[] args) {
-		logger.error("{}", AES256.enCode("테스트"));
-		logger.error("{}", AES256.deCode(AES256.enCode("테스트")));
-		logger.error("{}", AES256.deCode("_Oktn06L7A5_dvWBRjVghViT9E2NC16zLA"));
+		logger.error("{}", AES256.enCode("12"));
+		logger.error("{}", AES256.enCode("123"));
+		logger.error("{}", AES256.enCode("1234"));
+		logger.error("{}", AES256.enCode("12345"));
 	}
 	
 }
