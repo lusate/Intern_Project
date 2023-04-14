@@ -1,14 +1,14 @@
 package com.omnilab.templatekotlin.config
 
-import java.util.ArrayList
-import java.util.Properties
-
+import net.sf.log4jdbc.Log4jdbcProxyDataSource
+import net.sf.log4jdbc.tools.Log4JdbcCustomFormatter
+import net.sf.log4jdbc.tools.LoggingType
 import org.apache.commons.dbcp2.BasicDataSource
 import org.apache.ibatis.session.SqlSession
 import org.apache.ibatis.session.SqlSessionFactory
-
 import org.mybatis.spring.SqlSessionFactoryBean
 import org.mybatis.spring.SqlSessionTemplate
+import org.slf4j.LoggerFactory
 import org.springframework.aop.Advisor
 import org.springframework.aop.aspectj.AspectJExpressionPointcut
 import org.springframework.aop.support.DefaultPointcutAdvisor
@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.jdbc.BadSqlGrammarException
 import org.springframework.jdbc.datasource.DataSourceTransactionManager
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.TransactionDefinition
@@ -25,13 +26,9 @@ import org.springframework.transaction.interceptor.DefaultTransactionAttribute
 import org.springframework.transaction.interceptor.RollbackRuleAttribute
 import org.springframework.transaction.interceptor.RuleBasedTransactionAttribute
 import org.springframework.transaction.interceptor.TransactionInterceptor
-
-import net.sf.log4jdbc.Log4jdbcProxyDataSource
-import net.sf.log4jdbc.tools.Log4JdbcCustomFormatter
-import net.sf.log4jdbc.tools.LoggingType
-import org.slf4j.LoggerFactory
-import org.springframework.jdbc.BadSqlGrammarException
 import java.sql.SQLException
+import java.util.ArrayList
+import java.util.Properties
 
 @Configuration
 @EnableTransactionManagement
@@ -43,24 +40,24 @@ internal class DatabaseConfig {
     private lateinit var applicationContext: ApplicationContext
 
     @Value("\${variable.db-class}")
-    private val db_class: String? = null
+    private val dbClass: String? = null
 
     @Value("\${variable.db-url}")
-    private val db_url: String? = null
+    private val dbUrl: String? = null
 
     @Value("\${variable.db-username}")
-    private val db_username: String? = null
+    private val dbUsername: String? = null
 
     @Value("\${variable.db-password}")
-    private val db_password: String? = null
+    private val dbPassword: String? = null
 
     @Bean(destroyMethod = "postDeregister")
     fun configureDataSource(): BasicDataSource {
         val dataSource = BasicDataSource()
-        dataSource.driverClassName = db_class
-        dataSource.url = db_url
-        dataSource.username = db_username
-        dataSource.password = db_password
+        dataSource.driverClassName = dbClass
+        dataSource.url = dbUrl
+        dataSource.username = dbUsername
+        dataSource.password = dbPassword
         dataSource.initialSize = 2 // 최초 커넥션 풀에 채원 넣을 커넥션 수
         dataSource.maxTotal = 50
         dataSource.maxIdle = 20 // 커넥션 풀에 반납할 때 최대로 유지될 수 있는 커넥션 수
@@ -102,22 +99,24 @@ internal class DatabaseConfig {
         rollbackRules.add(RollbackRuleAttribute(BadSqlGrammarException::class.java))
         rollbackRules.add(RollbackRuleAttribute(Exception::class.java))
 
-        //val readOnlyAttribute = DefaultTransactionAttribute(TransactionDefinition.PROPAGATION_REQUIRED)
+        // val readOnlyAttribute = DefaultTransactionAttribute(TransactionDefinition.PROPAGATION_REQUIRED)
         val readOnlyAttribute = DefaultTransactionAttribute(TransactionDefinition.PROPAGATION_REQUIRES_NEW)
         readOnlyAttribute.isReadOnly = true
 
-        //readOnlyAttribute.setTimeout(10);
+        // readOnlyAttribute.setTimeout(10);
         readOnlyAttribute.timeout = -1
 
-
-        //val writeAttribute = RuleBasedTransactionAttribute(TransactionDefinition.PROPAGATION_REQUIRES_NEW, rollbackRules)
-        val writeAttribute = RuleBasedTransactionAttribute(TransactionDefinition.PROPAGATION_REQUIRES_NEW, rollbackRules)
+        // val writeAttribute = RuleBasedTransactionAttribute(TransactionDefinition.PROPAGATION_REQUIRES_NEW, rollbackRules)
+        val writeAttribute = RuleBasedTransactionAttribute(
+            TransactionDefinition.PROPAGATION_REQUIRES_NEW,
+            rollbackRules
+        )
         writeAttribute.timeout = -1
 
         val readOnlyTransactionAttributesDefinition = readOnlyAttribute.toString()
         val writeTransactionAttributesDefinition = writeAttribute.toString()
-        //log.info("Read Only Attributes :: {}", readOnlyTransactionAttributesDefinition);
-        //log.info("Write Attributes :: {}", writeTransactionAttributesDefinition);
+        // log.info("Read Only Attributes :: {}", readOnlyTransactionAttributesDefinition);
+        // log.info("Write Attributes :: {}", writeTransactionAttributesDefinition);
 
         // read-only
         txAttributes.setProperty("sel*", readOnlyTransactionAttributesDefinition)
@@ -135,7 +134,7 @@ internal class DatabaseConfig {
     @Bean
     fun txAdviceAdvisor(): Advisor {
         val pointcut = AspectJExpressionPointcut()
-        //pointcut.setExpression("(execution(* *..*.service..*.*(..)) || execution(* *..*.services..*.*(..)))");
+        // pointcut.setExpression("(execution(* *..*.service..*.*(..)) || execution(* *..*.services..*.*(..)))");
         pointcut.expression = "execution(* com.template.repository..*.*(..))"
         return DefaultPointcutAdvisor(pointcut, txAdvice())
     }

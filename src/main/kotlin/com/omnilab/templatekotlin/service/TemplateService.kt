@@ -1,6 +1,6 @@
 package com.omnilab.templatekotlin.service
 
-interface TEMPLATEService {
+interface TemplateService {
     fun test(): String
     fun taskService(r: Runnable)
 }

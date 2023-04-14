@@ -335,18 +335,14 @@ public class CommonUtils {
      * 16자리  숫자 + 알파벳 대소문자로 구성된 랜덤 스트링을 리턴한다.
      */
     public static String getRandString16() {
-        StringBuffer temp = new StringBuffer();
+        StringBuilder temp = new StringBuilder();
         SecureRandom rnd = new SecureRandom();
         for (int i = 0; i < 16; i++) {
             int rIndex = rnd.nextInt(2);
-            switch (rIndex) {
-                case 0:
-                    temp.append((char) ((int) (rnd.nextInt(26)) + 97));
-                    break;
-                case 1:
-                    // 0-9
-                    temp.append((rnd.nextInt(10)));
-                    break;
+            if(rIndex == 0){
+                temp.append((char) (rnd.nextInt(26) + 97));
+            }else {
+                temp.append((rnd.nextInt(10)));
             }
         }
         return temp.toString();
@@ -435,7 +431,7 @@ public class CommonUtils {
      * @Method Description :
      * 입력 받은 Object에 포함되어 있는 키값과 인자를 프린트한다.
      */
-    public static void ObjPrint(Object ob) {
+    public static void objPrint(Object ob) {
         try {
             StringBuilder sb = new StringBuilder();
             for (Field field : ob.getClass().getDeclaredFields()) {
@@ -444,7 +440,7 @@ public class CommonUtils {
                 sb.append("|").append(field.getName()).append(" \t|").append("| ").append(value).append(" |\r\n");
             }
             logger.error("====================================== ObjPrint ======================================");
-            logger.error(sb.toString());
+            logger.error("{}", sb);
             logger.error("====================================== ObjPrint ======================================");
         } catch (Exception e) {
             logger.error("객체 변수 확인 에러", e);
@@ -582,8 +578,7 @@ public class CommonUtils {
      */
     public static String simpleDateToDatetime(Date date) {
         SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String strDate = form.format(date);
-        return strDate;
+        return form.format(date);
     }
 
     /**
@@ -595,8 +590,7 @@ public class CommonUtils {
      */
     public static String simpleDateToDate(Date date) {
         SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd");
-        String strDate = form.format(date);
-        return strDate;
+        return form.format(date);
     }
 
     /**

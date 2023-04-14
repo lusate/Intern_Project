@@ -1,6 +1,6 @@
 package com.omnilab.templatekotlin.controller
 
-import com.omnilab.templatekotlin.service.TEMPLATEService
+import com.omnilab.templatekotlin.service.TemplateService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -21,7 +21,7 @@ class MainController {
 
     @Autowired
     @Qualifier("TEMPLATEServiceImpl")
-    private lateinit var service: TEMPLATEService
+    private lateinit var service: TemplateService
 
     @Autowired
     private lateinit var restTemplate: RestTemplate

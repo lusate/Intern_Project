@@ -1,21 +1,20 @@
 package com.omnilab.templatekotlin.config.view
 
+import org.apache.poi.openxml4j.exceptions.OpenXML4JRuntimeException
+import org.apache.poi.xssf.streaming.SXSSFWorkbook
 import org.springframework.web.servlet.view.AbstractView
+import java.io.IOException
+import java.io.OutputStream
+import java.io.PrintWriter
+import java.net.URLEncoder
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import java.io.IOException
-import java.io.PrintWriter
-import org.apache.poi.openxml4j.exceptions.OpenXML4JRuntimeException
-import java.text.SimpleDateFormat
-import org.apache.poi.xssf.streaming.SXSSFWorkbook
-import java.io.OutputStream
-import java.net.URLEncoder
-import java.util.*
 
+class ExcelDownloadView : AbstractView() {
 
-class ExcelDownloadView: AbstractView() {
-
-    override fun getContentType(): String? {
+    override fun getContentType(): String {
         return "application/octet-stream"
     }
 
@@ -27,13 +26,14 @@ class ExcelDownloadView: AbstractView() {
 
         try {
             response.contentType = this.contentType
+            val attacheStr = "attachment; fileName="
             val header = request.getHeader("User-Agent")
             if (header.contains("Edge")) {
-                response.setHeader("Content-Disposition", "attachment; fileName=" + URLEncoder.encode(filename, "UTF-8").replace("\\+", "%20") + ";")
+                response.setHeader("Content-Disposition", attacheStr + URLEncoder.encode(filename, "UTF-8").replace("\\+", "%20") + ";")
             } else if (header.contains("Chrome") || header.contains("Opera") || header.contains("Firefox")) {
-                response.setHeader("Content-Disposition", "attachment; fileName=" + String(filename.toByteArray(Charsets.UTF_8), Charsets.ISO_8859_1) + ";")
+                response.setHeader("Content-Disposition", attacheStr + String(filename.toByteArray(Charsets.UTF_8), Charsets.ISO_8859_1) + ";")
             } else {
-                response.setHeader("Content-Disposition", "attachment; fileName=" + URLEncoder.encode(filename, "UTF-8").replace("\\+", "%20") + ";")
+                response.setHeader("Content-Disposition", attacheStr + URLEncoder.encode(filename, "UTF-8").replace("\\+", "%20") + ";")
             }
             response.setHeader("Content-Transfer-encoding", "binary")
 
@@ -50,22 +50,21 @@ class ExcelDownloadView: AbstractView() {
             val out: PrintWriter
             try {
                 out = response.writer
-                out.print("<script type='text/javascript'>alert('파일 생성 도중 오류가 났습니다.\\n관리자에게 문의 바랍니다.'); window.open('about:blank', '_self').close();</script>")
+                out.print(
+                    "<script type='text/javascript'>alert('파일 생성 도중 오류가 났습니다.\\n관리자에게 문의 바랍니다.'); window.open('about:blank', '_self').close();</script>"
+                )
                 out.flush()
                 out.close()
             } catch (e1: IOException) {
                 logger.error("엑셀 다운로드 리스폰스 에러", e)
             }
-
         } finally {
             try {
                 os?.close()
                 worker.close()
             } catch (e: IOException) {
-
+                logger.error("ExcelDownloadView {}", e)
             }
-
         }
     }
-
 }

@@ -15,9 +15,8 @@ import org.springframework.stereotype.Component
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 
-
 @Component
-class UserService : UserDetailsService{
+class UserService : UserDetailsService {
 
     private val log = LoggerFactory.getLogger(UserService::class.java)
 
@@ -30,13 +29,14 @@ class UserService : UserDetailsService{
     override fun loadUserByUsername(username: String): UserDetails {
         log.error("loadUserByUsername~!~!~")
         var ip = CommonUtils.clientIp(request)
-        if (ip == "0:0:0:0:0:0:0:1")
+        if (ip == "0:0:0:0:0:0:0:1") {
             ip = "127.0.0.1"
+        }
 
         val dto = sqlSession.selectOne<UserDetailDto>("selByUserName", username)
-        if(dto == null){
+        if (dto == null) {
             throw BadCredentialsException("아이디 또는 패스워드가 틀립니다")
-        }else{
+        } else {
             dto.ip = ip
             val logDto = LoginLogDto()
             logDto.emp_id = username
@@ -54,12 +54,10 @@ class UserService : UserDetailsService{
                 "ROLE_ADMIN" -> roles.add(SimpleGrantedAuthority("ROLE_ADMIN"))
                 "ROLE_MANAGER" -> roles.add(SimpleGrantedAuthority("ROLE_MANAGER"))
                 "ROLE_NETSALES" -> roles.add(SimpleGrantedAuthority("ROLE_NETSALES"))
-                else -> {}
             }
             roles.add(SimpleGrantedAuthority(dto.role))
             dto.setAuthorities(roles)
             return dto
         }
     }
-
 }
