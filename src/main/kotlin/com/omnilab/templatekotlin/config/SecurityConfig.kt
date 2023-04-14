@@ -26,9 +26,10 @@ import java.util.*
 import javax.servlet.DispatcherType
 import javax.servlet.Filter
 
-
 @Configuration
 class SecurityConfig {
+
+    private val INDEXPAGE = "index.mi"
 
     @Autowired
     private lateinit var authenticationhandler: AuthenticationHandler
@@ -40,7 +41,7 @@ class SecurityConfig {
     fun webSecurityCustomizer(): WebSecurityCustomizer {
         return WebSecurityCustomizer { web: WebSecurity ->
             val firewall = StrictHttpFirewall()
-            //firewall.setAllowUrlEncodedPercent(true);
+            // firewall.setAllowUrlEncodedPercent(true);
             firewall.setAllowUrlEncodedSlash(true)
             firewall.setAllowUrlEncodedDoubleSlash(true)
 
@@ -55,13 +56,13 @@ class SecurityConfig {
         return http.requestMatchers { matchers: RequestMatcherConfigurer ->
             matchers.antMatchers("/font/**", "/css/**", "/js/**", "/img/**", "/inc/**", "/js/**", "/favicon.ico", "/html/**", "/*.ico")
         }
-        .authorizeHttpRequests { authorize: AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry ->
-            authorize.anyRequest().permitAll()
-        }
-        .requestCache { obj: RequestCacheConfigurer<HttpSecurity> -> obj.disable() }
-        .securityContext { obj: SecurityContextConfigurer<HttpSecurity> -> obj.disable() }
-        .sessionManagement { obj: SessionManagementConfigurer<HttpSecurity> -> obj.disable() }
-        .build()
+            .authorizeHttpRequests { authorize: AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry ->
+                authorize.anyRequest().permitAll()
+            }
+            .requestCache { obj: RequestCacheConfigurer<HttpSecurity> -> obj.disable() }
+            .securityContext { obj: SecurityContextConfigurer<HttpSecurity> -> obj.disable() }
+            .sessionManagement { obj: SessionManagementConfigurer<HttpSecurity> -> obj.disable() }
+            .build()
     }
 
     // 일반
@@ -78,14 +79,14 @@ class SecurityConfig {
             }
             .authorizeRequests { authorize: ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry ->
                 authorize
-                    .antMatchers("/", "/index", "/index.mi", "/loginProcess.service", "/logout.service", "/error.mi", "/cimg/**", "/cimgd/**", "/test/**").permitAll()
-                    //.antMatchers("/user").hasRole("USER")
+                    .antMatchers(INDEXPAGE, "/", "/index", "/loginProcess.service", "/logout.service", "/error.mi", "/cimg/**", "/cimgd/**", "/test/**").permitAll()
+                    // .antMatchers("/user").hasRole("USER")
                     .anyRequest().authenticated()
             }
             // 로그인 설정
             .formLogin { form: FormLoginConfigurer<HttpSecurity> ->
                 form
-                    .loginPage("/index.mi")
+                    .loginPage(INDEXPAGE)
                     .loginProcessingUrl("/loginProcess.service")
                     .usernameParameter("id")
                     .passwordParameter("password")
@@ -96,7 +97,7 @@ class SecurityConfig {
             .logout { logout: LogoutConfigurer<HttpSecurity> ->
                 logout
                     .logoutUrl("/logout.service")
-                    .logoutSuccessUrl("/index.mi")
+                    .logoutSuccessUrl(INDEXPAGE)
                     .invalidateHttpSession(true)
                     .deleteCookies("JSESSIONID", "TEMPLATE")
             }
@@ -122,12 +123,11 @@ class SecurityConfig {
             // 헤더 설정
             .headers { headers: HeadersConfigurer<HttpSecurity> ->
                 headers
-                    .xssProtection{ }
+                    .xssProtection { }
                     .contentSecurityPolicy("frame-ancestors 'self' *.milvusapp.com tableau-report.com *.tableau-report.com;")
             }
             .build()
     }
-
 
     @Bean
     fun authenticationManager(authenticationConfiguration: AuthenticationConfiguration): AuthenticationManager? {
@@ -141,7 +141,4 @@ class SecurityConfig {
         registration.setDispatcherTypes(EnumSet.allOf(DispatcherType::class.java))
         return registration
     }
-
-
-
 }

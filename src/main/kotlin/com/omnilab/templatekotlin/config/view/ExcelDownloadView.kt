@@ -26,14 +26,15 @@ class ExcelDownloadView : AbstractView() {
 
         try {
             response.contentType = this.contentType
+            val contentStr = "Content-Disposition"
             val attacheStr = "attachment; fileName="
             val header = request.getHeader("User-Agent")
             if (header.contains("Edge")) {
-                response.setHeader("Content-Disposition", attacheStr + URLEncoder.encode(filename, "UTF-8").replace("\\+", "%20") + ";")
+                response.setHeader(contentStr, attacheStr + URLEncoder.encode(filename, "UTF-8").replace("\\+", "%20") + ";")
             } else if (header.contains("Chrome") || header.contains("Opera") || header.contains("Firefox")) {
-                response.setHeader("Content-Disposition", attacheStr + String(filename.toByteArray(Charsets.UTF_8), Charsets.ISO_8859_1) + ";")
+                response.setHeader(contentStr, attacheStr + String(filename.toByteArray(Charsets.UTF_8), Charsets.ISO_8859_1) + ";")
             } else {
-                response.setHeader("Content-Disposition", attacheStr + URLEncoder.encode(filename, "UTF-8").replace("\\+", "%20") + ";")
+                response.setHeader(contentStr, attacheStr + URLEncoder.encode(filename, "UTF-8").replace("\\+", "%20") + ";")
             }
             response.setHeader("Content-Transfer-encoding", "binary")
 
