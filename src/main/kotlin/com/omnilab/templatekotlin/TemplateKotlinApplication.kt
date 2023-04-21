@@ -10,7 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @EnableWebSecurity
 @SpringBootApplication(exclude = [DataSourceTransactionManagerAutoConfiguration::class, DataSourceAutoConfiguration::class])
 @ComponentScan(basePackages = ["com.omnilab.templatekotlin.*"])
-open class TemplateKotlinApplication
+class TemplateKotlinApplication
 
 fun main(args: Array<String>) {
 	runApplication<TemplateKotlinApplication>(*args)
