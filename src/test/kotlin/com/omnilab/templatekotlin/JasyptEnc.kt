@@ -21,10 +21,5 @@ fun main() {
     config.setIvGeneratorClassName("org.jasypt.iv.RandomIvGenerator")
     config.stringOutputType = "base64"
     enc.setConfig(config)
-    /*
-    log.error("=========================")
-    log.error(enc.encrypt("test"))
-    log.error(enc.decrypt("bIvGp1nwv93dDalDAoX3XCMGOh/E0zrjwbggFBq62zCmq/2apMU7TcPzK4UisYVE"))
-    log.error("=========================")
-    */
+
 }

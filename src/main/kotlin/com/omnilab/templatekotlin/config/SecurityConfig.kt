@@ -18,6 +18,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.config.annotation.web.configurers.*
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.core.session.SessionRegistry
+import org.springframework.security.core.session.SessionRegistryImpl
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.csrf.CsrfFilter
 import org.springframework.security.web.firewall.StrictHttpFirewall
@@ -29,7 +31,7 @@ import javax.servlet.Filter
 @Configuration
 class SecurityConfig {
 
-    private val INDEXPAGE = "index.mi"
+    private val INDEXPAGE = "/index.mi"
 
     @Autowired
     private lateinit var authenticationhandler: AuthenticationHandler
@@ -77,11 +79,19 @@ class SecurityConfig {
             .csrf { csrf: CsrfConfigurer<HttpSecurity> ->
                 csrf.ignoringAntMatchers("/rest/**", "/api/**")
             }
+            // 접근 권한 설정
             .authorizeRequests { authorize: ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry ->
                 authorize
                     .antMatchers(INDEXPAGE, "/", "/index", "/loginProcess.service", "/logout.service", "/error.mi", "/cimg/**", "/cimgd/**", "/test/**").permitAll()
                     // .antMatchers("/user").hasRole("USER")
                     .anyRequest().authenticated()
+            }
+            // 중복 로그인 설정
+            .sessionManagement { management: SessionManagementConfigurer<HttpSecurity> ->
+                management.maximumSessions(1)
+                    .maxSessionsPreventsLogin(true)
+                    .sessionRegistry(sessionRegistry())
+                    //.expiredUrl()
             }
             // 로그인 설정
             .formLogin { form: FormLoginConfigurer<HttpSecurity> ->
@@ -141,4 +151,10 @@ class SecurityConfig {
         registration.setDispatcherTypes(EnumSet.allOf(DispatcherType::class.java))
         return registration
     }
+
+    @Bean
+    fun sessionRegistry(): SessionRegistry {
+        return SessionRegistryImpl()
+    }
+
 }

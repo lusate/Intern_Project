@@ -1,8 +1,10 @@
 package com.omnilab.templatekotlin.model
 
-import org.springframework.security.core.userdetails.UserDetails
+import org.apache.commons.lang3.builder.EqualsBuilder
 import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
 import java.util.*
+
 
 /**
  * <pre>
@@ -15,7 +17,6 @@ import java.util.*
  * @date : 2017. 5. 29. 오후 2:45:40
  */
 class UserDetailDto : UserDetails {
-    // GET/SET
     var rid = 0
     var emp_id: String? = null
     var pw: String? = null
@@ -41,9 +42,6 @@ class UserDetailDto : UserDetails {
     var login_dt: Date? = null
     var login_result = 0
     var ip: String? = null
-    var ito1: String? = null
-    var ito2: String? = null
-    var ito3: String? = null
 
     fun setAuthorities(authorities: Collection<GrantedAuthority?>?) {
         this.authorities = authorities
@@ -84,4 +82,21 @@ class UserDetailDto : UserDetails {
     override fun isEnabled(): Boolean {
         return true
     }
+
+    override fun hashCode(): Int {
+        return Objects.hash(emp_id)
+    }
+
+    override fun equals(obj: Any?): Boolean {
+        if (this === obj) return true
+        if (obj !is UserDetailDto) return false
+        val that: UserDetailDto = obj
+        return EqualsBuilder().append(emp_id, that.emp_id)
+            .append(email, that.email)
+            .append(username, that.username)
+            .append(password, that.password)
+            .append(authorities, that.authorities)
+            .isEquals
+    }
+
 }
