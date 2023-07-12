@@ -18,10 +18,10 @@ class CustomAuthenticationProvider : AuthenticationProvider {
     private val log = LoggerFactory.getLogger(CustomAuthenticationProvider::class.java)
 
     @Autowired(required = true)
-    private val request: HttpServletRequest? = null
+    private lateinit var request: HttpServletRequest
 
     @Autowired
-    private val sqlSession: SqlSession? = null
+    private lateinit var sqlSession: SqlSession
 
     override fun authenticate(auth: Authentication): Authentication {
         val userId = auth.principal.toString()

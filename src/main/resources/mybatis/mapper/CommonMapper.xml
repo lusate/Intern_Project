@@ -6,10 +6,16 @@
 	<cache />
 
 	<select id="select1" resultType="String">
-		select now() from dual
+		/*	select1	*/
+		select NOW()
+			, '1'
+			, '2'
+			, '3'
+		from dual
 	</select>
 	
 	<select id="select2" resultType="String">
+		/*	select2	*/
 		select now() from dual
 	</select>
 </mapper>

@@ -10,54 +10,21 @@
 	</appender>
 	<!-- 
 		# log4jdbc settings development production
-		jdbc.connection     :     WARN       WARN
-		jdbc.audit          :     WARN       WARN
-		jdbc.sqlonly        :     WARN       WARN
-		jdbc.sqltiming      :     INFO       WARN
-		jdbc.resultset      :     WARN       WARN
-		jdbc.resultsettable :     INFO       WARN
+		jdbc.connection     :     OFF       OFF
+		jdbc.audit          :     OFF       OFF
+		jdbc.sqlonly        :     OFF       OFF
+		jdbc.sqltiming      :     INFO      OFF
+		jdbc.resultset      :     OFF       OFF
+		jdbc.resultsettable :     INFO      OFF
 	-->
-	
-	<logger name="jdbc.connection" additivity="false">
-    	<level value="WARN"/>
-    	<appender-ref ref="CONSOLE"/>
-	</logger>
+	<logger name="jdbc" level="OFF"/>
+	<logger name="jdbc.connection" level="OFF"/>
+	<logger name="jdbc.audit" level="OFF"/>
+	<logger name="jdbc.sqlonly" level="OFF"/>
+	<logger name="jdbc.sqltiming" level="OFF"/>
+	<logger name="jdbc.resultset" level="OFF"/>
+	<logger name="jdbc.resultsettable" level="OFF"/>
 
-	<logger name="jdbc.audit" additivity="false">
-    	<level value="WARN"/>
-    	<appender-ref ref="CONSOLE"/>
-	</logger>
-
-	<logger name="jdbc.sqlonly" additivity="false">
-    	<level value="WARN"/>
-    	<appender-ref ref="CONSOLE"/>
-	</logger>
-
-	<logger name="jdbc.sqltiming" additivity="false">
-    	<level value="INFO"/>
-    	<appender-ref ref="CONSOLE"/>
-	</logger>
-
-	<logger name="jdbc.resultset" additivity="false">
-    	<level value="WARN"/>
-    	<appender-ref ref="CONSOLE"/>
-	</logger>
-
-	<logger name="jdbc.resultsettable" additivity="false">
-    	<level value="WARN"/>
-    	<appender-ref ref="CONSOLE"/>
-	</logger> 
-	
-	<logger name="jdbc.sqlonly" additivity="false">
-    	<level value="WARN"/>
-    	<appender-ref ref="CONSOLE"/>
-	</logger>
-	
-	<logger name="org.apache.catalina.core.StandardWrapperValve" additivity="false">
-    	<level value="WARN"/>
-    	<appender-ref ref="CONSOLE"/>
-	</logger>
-	
 	<root level="INFO">
 		<appender-ref ref="CONSOLE"/>
 	</root>	
