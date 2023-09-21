@@ -60,7 +60,8 @@ class UserDetailDto : UserDetails {
     }
 
     override fun getPassword(): String {
-        return ""
+//        return ""
+        return password!!
     }
 
     override fun getUsername(): String {

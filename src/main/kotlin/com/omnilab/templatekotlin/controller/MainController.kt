@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession
 @Controller
 class MainController {
 
-	val logger = LoggerFactory.getLogger(this::class.java)
+    val logger = LoggerFactory.getLogger(this::class.java)
 
     @Autowired
     @Qualifier("TEMPLATEServiceImpl")
@@ -28,7 +28,7 @@ class MainController {
 
     @RequestMapping(value = ["/index", "/index.mi"], method = [RequestMethod.GET])
     fun index(): ModelAndView {
-		val view = ModelAndView("index")
+        val view = ModelAndView("index")
         return view
     }
 
@@ -72,7 +72,7 @@ class MainController {
             logger.error("ERROR : ", throwable)
             logger.error("#########################")
         }catch (e: Exception) {
-            logger.error("EROOR Controller", e)
+            logger.error("ERROR Controller", e)
         }
         return "redirect:/index.mi"
     }

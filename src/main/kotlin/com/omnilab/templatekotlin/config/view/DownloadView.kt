@@ -10,7 +10,7 @@ import java.io.OutputStream
 import java.net.URLEncoder
 
 
-class DownloadView: AbstractView() {
+class DownloadView: AbstractView() { // AbstractView로 파일 다운로드 기능 구현. 파일 다운로드는 뷰에서 이루어진다.
 
     override fun getContentType(): String? {
         // 8비트로 된 일련의 데이터..application의 데이타 형식을 굳이 지정하지 않을떄 사용함.

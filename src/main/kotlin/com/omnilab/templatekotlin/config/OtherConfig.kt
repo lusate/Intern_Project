@@ -2,26 +2,24 @@ package com.omnilab.templatekotlin.config
 
 import com.omnilab.templatekotlin.common.ImagePaginationRenderer
 import com.omnilab.templatekotlin.config.handler.RestTemplateErrorHandler
-
-import org.springframework.context.annotation.Configuration
-import org.springframework.integration.config.EnableIntegration
-
+import egovframework.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationManager
 import egovframework.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationRenderer
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationRenderer
-import egovframework.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationManager
 import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.impl.client.LaxRedirectStrategy
 import org.springframework.boot.web.client.RestTemplateBuilder
-
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
-import org.springframework.mail.javamail.JavaMailSenderImpl
+import org.springframework.integration.config.EnableIntegration
 import org.springframework.mail.javamail.JavaMailSender
+import org.springframework.mail.javamail.JavaMailSenderImpl
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView
 import java.time.Duration
-
 import java.util.*
+
 
 @Configuration
 @EnableIntegration
@@ -86,4 +84,10 @@ class OtherConfig {
             .build()
     }
 
+
+    // CKEditor 때문에 controller가 modelandview를 통해 json 형식으로 return 할 수 있게 하기 위해 넣어줌
+    @Bean
+    fun jsonView(): MappingJackson2JsonView? {
+        return MappingJackson2JsonView()
+    }
 }

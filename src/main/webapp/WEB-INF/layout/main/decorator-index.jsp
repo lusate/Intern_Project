@@ -25,8 +25,18 @@
 		<script type="text/javascript" src="/js/jquery-2.1.3.min.js"></script>
 		<script type="text/javascript" src="/js/common.js?v=0.01"></script>
 		<script type="text/javascript" src="/js/jquery.validate.min.js"></script>
+
+
+		<script type="text/javascript" src="/js/bootstrap.bundle.js"></script>
+		<script type="text/javascript" src="/js/bootstrap.bundle.min.js"></script>
+<%--		<script type="text/javascript" src="/js/bootstrap.esm.js"></script>--%>
+		<script type="text/javascript" src="/js/bootstrap.js"></script>
 	</head>
 	<body>
+		<tiles:insertAttribute name="header" />
+
+		<tiles:insertAttribute name="bodyHeader" />
 		<tiles:insertAttribute name="body" />
+		<tiles:insertAttribute name="footer" />
 	</body>
 </html>

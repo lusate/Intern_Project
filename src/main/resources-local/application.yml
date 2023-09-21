@@ -11,7 +11,33 @@ jasypt:
 
 variable:
   db-class: org.mariadb.jdbc.Driver
-  db-url: jdbc:mariadb://127.0.0.1:3306/test
-  db-username: ENC(bIvGp1nwv93dDalDAoX3XCMGOh/E0zrjwbggFBq62zCmq/2apMU7TcPzK4UisYVE)
-  db-password: ENC(bIvGp1nwv93dDalDAoX3XCMGOh/E0zrjwbggFBq62zCmq/2apMU7TcPzK4UisYVE)
+  db-url: jdbc:mariadb://127.0.0.1:3306/jpashop
+  db-username: root
+  db-password: milvus1234
 
+
+#spring:
+#  thymeleaf:
+#    prefix: classpath:/resources/
+#    suffix: .html
+#    view-names: templates/*
+#    enabled: true
+
+file:
+  dir: C:/tomcat/webapps/ROOT/WEB-INF/classes/static/img/
+#  dir: C:/Users/milvus/Desktop/template_kotlin/src/main/resources/static/img/
+
+
+spring:
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+
+#  db-class: org.mysql.cj.jdbc.driver

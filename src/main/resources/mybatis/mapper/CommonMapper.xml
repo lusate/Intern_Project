@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 프로젝트에 맞게 수정  -->
+<!--<mapper namespace="mybatis.mapper.CommonMapper">-->
 <mapper namespace="mybatis.mapper.CommonMapper">
 	<cache />
 
@@ -18,4 +19,26 @@
 		/*	select2	*/
 		select now() from dual
 	</select>
+
+
+
+	<select id="idCheck" parameterType="String" resultType="Integer">
+		SELECT count(loginId)
+		FROM member
+		WHERE loginId = #{loginId}
+	</select>
+
+	<insert id="memberRegister">
+		INSERT into member(loginId, password, username)
+		VALUES (#{loginId}, #{password}, #{username})
+	</insert>
+
+
+<!--	<select id="itemDtype">-->
+<!--		<choose>-->
+<!--			<when test="">-->
+<!--				-->
+<!--			</when>-->
+<!--		</choose>-->
+<!--	</select>-->
 </mapper>

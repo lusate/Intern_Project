@@ -3,6 +3,7 @@ package com.omnilab.templatekotlin.service
 import com.omnilab.templatekotlin.common.CommonUtils
 import com.omnilab.templatekotlin.model.LoginLogDto
 import com.omnilab.templatekotlin.model.UserDetailDto
+import com.omnilab.templatekotlin.repository.member.MemberRepository
 import org.apache.ibatis.session.SqlSession
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,10 +16,14 @@ import org.springframework.stereotype.Component
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 
+
 @Component
 class UserService : UserDetailsService {
 
     private val log = LoggerFactory.getLogger(UserService::class.java)
+
+    @Autowired
+    private lateinit var memberRepository: MemberRepository
 
     @Autowired
     private lateinit var sqlSession: SqlSession
@@ -52,12 +57,14 @@ class UserService : UserDetailsService {
             when (dto.role) {
                 "ROLE_USER" -> roles.add(SimpleGrantedAuthority("ROLE_USER"))
                 "ROLE_ADMIN" -> roles.add(SimpleGrantedAuthority("ROLE_ADMIN"))
-                "ROLE_MANAGER" -> roles.add(SimpleGrantedAuthority("ROLE_MANAGER"))
-                "ROLE_NETSALES" -> roles.add(SimpleGrantedAuthority("ROLE_NETSALES"))
+//                "ROLE_MANAGER" -> roles.add(SimpleGrantedAuthority("ROLE_MANAGER"))
+//                "ROLE_NETSALES" -> roles.add(SimpleGrantedAuthority("ROLE_NETSALES"))
             }
             roles.add(SimpleGrantedAuthority(dto.role))
             dto.setAuthorities(roles)
             return dto
         }
+
+
     }
 }

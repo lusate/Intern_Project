@@ -75,7 +75,6 @@ internal class DatabaseConfig {
         transactionManager.isGlobalRollbackOnParticipationFailure = false
         return transactionManager
     }
-
     @Bean
     fun txAdvice(): TransactionInterceptor {
         val txAdvice = TransactionInterceptor()

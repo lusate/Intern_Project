@@ -41,12 +41,20 @@ class CommonExceptionHandler {
 
     @ExceptionHandler(value = [RequestRejectedException::class])
     fun rejected(e: RequestRejectedException): String {
-        return "redirect:/html/error2.html"
+        return "redirect:/html/error.html"
     }
 
     @ExceptionHandler(value = [Exception::class])
     fun handleException(e: Exception): String {
         logger.error("error", e)
-        return "redirect:/html/error2.html"
+        return "redirect:/html/error.html"
     }
 }
+
+
+
+/**
+ * CommonExceptionHandler : 공통 Exception 처리하기
+ * 웹 어플리케이션에서 발생할 수 있는 Exception 을 분리하여, 각 Excpetion에 따라 실행되어야하는 코드를 공통화시킬 수 있다.
+ * 중복 코드를 줄일 수 있고, Restful 에서 사용되는 404, 400, 500, 401 등의 에러에 따른 로직을 분리하여 공통화 처리를 함으로써 좀더 나은 프로젝트로 개발할 수 있다.
+ */
