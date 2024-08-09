@@ -28,5 +28,3 @@
 ## 사용 기술
 ☛ Spring Framework, Java, JPA, Spring Data JPA, QueryDSL, Javascript, 
 jQuery, HTML5, CSS, Apache Tomcat, IntelliJ, JSP, MySQL, Ajax, Thymeleaf
-
-실행 화면 업로드하기
