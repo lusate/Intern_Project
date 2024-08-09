@@ -1,8 +1,13 @@
-## UIS(Used Item Sale)
+## 🌟 UIS(Used Item Sale)
 
+<br>
 
-## 프로젝트 간단 소개
-☛ 사용자들이 중고 제품을 구매할 수 있는 사이트를 개발
+## 프로젝트 간단 소개<br>
+☛ 사용자들이 중고 제품을 구매할 수 있는 사이트를 개발<br>
+
+## 사용 기술
+☛ Spring Framework, Java, JPA, Spring Data JPA, QueryDSL, Javascript, 
+jQuery, HTML5, CSS, Apache Tomcat, IntelliJ, JSP, MySQL, Ajax, Thymeleaf
 
 
 ## 주요 업무
@@ -24,7 +29,48 @@
 통해 엑셀 다운로드도 구현하고 Modal을 사용하여 상품에 대한 리뷰와 댓글도 등록하고 수정
 할 수 있도록 개발.
 
+<br>
+<br>
 
-## 사용 기술
-☛ Spring Framework, Java, JPA, Spring Data JPA, QueryDSL, Javascript, 
-jQuery, HTML5, CSS, Apache Tomcat, IntelliJ, JSP, MySQL, Ajax, Thymeleaf
+### 🔔 <프로젝트 내 담당 업무>
+- Spring Security를 활용하여 로그인, 회원가입, 회원 수정 기능 구현.
+- JPA와 MySQL로 ERD를 설계하고, JSP/HTML/CSS/JS로 상품 관리 및 구매 기능을 구현.
+- jQuery와 Ajax로 재고를 효율적으로 관리하며, 재고 부족 시 구매를 자동으로 차단하도록 구현.
+- 대규모 데이터를 POI로 엑셀 다운로드 가능하게 하며, Modal을 활용해 상품 리 뷰와 댓글을 손쉽게 등록·수정하도록 개발.
+- CKEditor를 적용해 리뷰와 댓글 작성 시 스타일링과 이미지 업로드 기능을 구 현.
+- tomcat에서의 수동 배포.
+
+<br>
+<br>
+
+### 🔔 <문제 해결 경험>
+**📌 Spring Security를 활용하여 CSRF 공격 방지를 위한 토큰 생성 및 관리 기능!!**
+<br>
+
+- 원인 분석
+  - HTML 폼에서 CSRF 토큰을 올바르게 생성하여 전송하지 않아 CSRF 토큰이 누락.
+  - JavaScript에서 폼을 제출할 때 CSRF 토큰을 올바르게 포함하지 않은 문제.
+- 해결 방안
+  - Spring Security를 통해 CSRF 공격을 방지하기 위해 HTML 폼에 CSRF 토큰을 적절히 포함하여 보안을 강화.
+  - multipart/form-data 형식의 폼에서도 경로에 CSRF 토큰을 포함하여 처리.
+
+<br>
+
+**📌 Ajax를 활용한 비동기적 데이터 요청과 효율적인 통신!!**
+<br>
+
+- 원인 분석
+  - Ajax 요청에서 서버로 데이터를 전송할 때, 데이터가 올바르게 전달되지 않 는 문제 발생.
+  - jQuery를 통해 HTML 요소의 값을 찾을 때, 올바른 위치를 지정하지 못해 서 데이터를 정확히 가져오지 못함.
+
+- 해결 방안
+  - JSON.stringify() 함수를 사용하여 객체를 JSON 문자열로 변환하여 전송.
+  - html에서 부모와 자식 요소의 관계를 정확히 파악하여 원하는 요소의 위치 를 찾아내 서버에 전송할 값을 설정.
+
+<br>
+<br>
+
+🔔 <회고>
+처음 접하는 기술과 도구들을 스스로 학습하고 적용하는 과정에서 자기 주도적 학습 능력을 키울 수 있었습니다.<br>
+프로젝트를 진행하면서 겪었던 문제들이 발생했을 때 금방 해결할 수 있게 에러들과 기능들에 대한 해결 방법들을 기록하고 배울 수 있어서 좀 더 자신감을 가 질 수 있게 되었습니다.<br>
+명확한 목표 설정과 계획 수립, 그리고 시간 관리에 대한 인식을 더욱 깊고, 의미 있게 생각하게 되었습니다.<br>
